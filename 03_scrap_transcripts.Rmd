@@ -1,0 +1,201 @@
+---
+title: "Scrap episode transcripts"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+
+Aim:
+* Scrap and clean episode transcripts from genius.com;
+* Relate all characters that were scrapped in script '02_scrap_characters_list.Rmd' to those in transcripts.
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+rm(list = ls())
+
+library(httr)
+library(tidytext)
+library(knitr)
+library(xml2)
+library(rebus)
+library(stringr)
+library(rvest)
+library(magrittr)
+library(tidyverse)
+
+```
+
+
+#Scrap list of GoT episodes
+I manually limited it at 67
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+if(!"episode_list_03.RDS" %in% list.files("interim_output/")){
+  
+episode.list <- read_html("https://en.wikipedia.org/wiki/List_of_Game_of_Thrones_episodes")
+
+episode.list %<>%
+  html_nodes( ".summary") %>%
+  html_text() %>%
+  str_replace_all(pattern = rebus::or("[[:punct:]]", "[[:cntrl:]]"),
+                  replacement = "")
+
+episode.list %>%
+  write_rds("interim_output/episode_list_03.RDS")
+
+}else{
+  
+episode.list <- read_rds("interim_output/episode_list_03.RDS")[1:67] 
+  
+}
+
+```
+
+# Scrap GoT transcripts from genius.com
+There seem to be two different patterns in the links of genius.com
+Ones end with 'script-annotated' and others just with 'annotated'.
+e.g. "https://genius.com/Game-of-thrones-episode-annotated" and "https://genius.com/Game-of-thrones-episode-script-annotated"
+
+## Create hypothetical links to transcript websites
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+links.all.seasons.1 <- episode.list %>%
+  tolower() %>%
+  str_replace_all(pattern = " ", replacement = "-") %>%
+  str_c("https://genius.com/Game-of-thrones", ., "annotated", sep = "-")
+
+links.all.seasons.2 <- episode.list %>%
+  tolower() %>%
+  str_replace_all(pattern = " ", replacement = "-") %>%
+  str_c("https://genius.com/Game-of-thrones", ., "script","annotated", sep = "-")
+
+links.all.seasons.df <- data_frame(link_1 = links.all.seasons.1,
+                                   link_2 = links.all.seasons.2)
+
+```
+
+
+## Check if links are valid 
+Not all episodes are transcribed in genius.com webpage!
+Spot missing transcribed episodes. Careful, this process requieres internet connextion and might take a few minutes.
+_To update list of transcripts, delete the output of this chunk of code and run it_
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+if(!"valid_transcript_links_03.RDS" %in% list.files("interim_output")){
+
+valid.links.1 <- links.all.seasons.df$link_1 %>%
+  map_lgl(url_success) 
+
+valid.links.2 <- vector(mode = "logical", length = length(valid.links.1))
+
+valid.links.2[valid.links.1 == F] <- links.all.seasons.df$link_2[valid.links.1 == F] %>%
+  map_lgl(url_success)
+  
+links.all.seasons.df %<>%
+  bind_cols(valid_links_1 = valid.links.1,
+            valid_links_2 = valid.links.2)
+
+valid.links <- if_else(links.all.seasons.df$valid_links_1 == T,
+                       true = links.all.seasons.df$link_1,
+                       false = if_else(links.all.seasons.df$valid_links_2 == T,
+                                       true = links.all.seasons.df$link_2,
+                                       false = "missing episode"))
+
+valid.links %>%
+  write_rds(path = "interim_output/valid_transcript_links_03.RDS")
+
+}else{
+  
+  valid.links <- read_rds(path = "interim_output/valid_transcript_links_03.RDS")
+  
+}
+
+```
+
+**04-11-2017 There seem to be 22 episodes missing!** 
+**Important: 2 episodes (22 and 23) have transcripts without names!**
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+(valid.links == "missing episode") %>% sum()
+
+valid.links
+
+```
+
+## Scrap transcripts
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+season.vector <- c(str_c("season_", rep(1:6, 10)), rep("season_7", 7)) %>% sort
+
+episode.number.vector <- c(rep(1:10, 6), rep(1:7))
+
+episode.list.df <- data_frame(season = season.vector,
+                              episode_number = episode.number.vector,
+                              episode_name = episode.list,
+                              link = valid.links)
+
+episode.list.df
+
+rm(valid.links, season.vector, episode.number.vector, links.all.seasons.1, links.all.seasons.2,
+   links.all.seasons.df, episode.list)
+
+```
+
+## Convert trantscripts into tidy text
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+if(!"all_transcripts_03.RDS" %in% list.files("interim_output/")){
+
+all.transcripts <- episode.list.df$link[which(episode.list.df$link != "missing episode")] %>%
+  map(function(x){read_html(x) %>%
+  html_nodes(".lyrics p") %>%
+  html_text })
+
+ all.transcripts %>% 
+   write_rds(path = "interim_output/all_transcripts_03.RDS")
+ 
+}else{
+  
+  all.transcripts <- read_rds("interim_output/all_transcripts_03.RDS")
+  
+}
+ 
+```
+
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+all.transcripts %<>%
+  map_chr(function(x){x %>% unlist %>% str_c(collapse = "_") })
+
+episode.list.df$transcript <- NA
+
+episode.list.df$transcript[episode.list.df$link != "missing episode"] <- all.transcripts
+
+
+```
+
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+rm(all.transcripts)
+
+```
+
+# Manually explore scrapped GoT transcripts
+Transcripts can be manually explored here using the function writeLines. Careful with large outputs.
+```{r eval=FALSE, warning=FALSE, message=FALSE}
+
+episode.list.df$transcript[3] %>% 
+  writeLines()
+
+```
+
+# Export objects
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+episode.list.df %>%
+  write_rds("interim_output/episode_list_transcripts_03.RDS")
+
+```
+

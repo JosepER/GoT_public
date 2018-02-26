@@ -1,0 +1,148 @@
+---
+title: "04_Identify characters in transcripts"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+
+# Prepare session
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+rm(list = ls())
+
+library(stringr)
+library(rebus)
+library(magrittr)
+library(tidyverse)
+
+```
+
+# Import data from previous scripts 
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+episode.list.df <- read_rds("interim_output/episode_list_transcripts_03.RDS")
+
+```
+
+
+#Spot character names in transcripts
+Transcriptions use names both in upper and lower case! 
+e.g. 
+* https://genius.com/Game-of-thrones-winter-is-coming-annotated
+* https://genius.com/Game-of-thrones-the-kingsroad-annotated
+
+There are some transcripts that use \ n pattern, others that don't
+
+There are patterns of 'NAME (in valerian)' e.g:
+'CERSEI (sighs): Thank you so much for your kind words'.
+
+Names can have one or multiple words.
+
+
+I think the following issues should be solved now:
+TO DO: names can be preceeded by an interrogation mark in previous line. 
+TO DO: this has to be changed to any character, including "-"
+
+## Pattern to detect and extract character names 
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+pattern.character.names <- rebus::or( rebus::or("[[:punct:]]","\\s","\n") %R% "[[:alpha:]]+" %R% rebus::one_or_more(" [[:alpha:]]+") %R% ":",
+           rebus::or("[[:punct:]]","\\s","\n") %R% "[[:alpha:]]+" %R% rebus::zero_or_more(" [[:alpha:]]+") %R% " \\(" %R% rebus::one_or_more(rebus::or("[[:alpha:]]","\\s")) %R% "\\):")
+
+```
+
+**Export pattern to next script**
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+pattern.character.names %>% 
+  write_rds("interim_output/regex_pattern_identify_characters_transcripts.RDS")
+
+```
+
+
+## Apply pattern to obtain characters
+
+** Main pattern**
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+characters.transcripts.episode <- episode.list.df$transcript %>%
+str_extract_all(pattern = pattern.character.names) %>%
+  map(function(x) {x %>% str_replace_all(pattern = rebus::or(":", "\n", "\\.", 
+"\\(" %R% rebus::one_or_more("[[:print:]]") %R% "\\)"), replacement = "")})
+  
+rm(pattern.character.names)
+
+```
+
+
+## Characters to upper
+This is not the final list. Characters have to be cleaned in further scripts.
+```{r eval=FALSE, warning=FALSE, message=FALSE}
+
+characters.transcripts.episode %>%
+  unique()
+
+```
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+characters.transcripts.episode %<>%
+map(function(x){
+toupper(x) %>% 
+str_replace_all("[[:punct:]]", "") %>%
+str_trim(side = "both") } )
+
+```
+
+Character counts by episode
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+characters.transcripts.count <- characters.transcripts.episode %>%
+  map(function(x) {x %>% table %>% sort(decreasing = T)})
+  
+characters.transcripts.count
+
+```
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+characters.transcripts.count %>%
+  map(function(x){x %>% rownames %>% str_count(pattern = rebus::exactly("AEMON")) %>% sum() })
+
+
+```
+
+
+All characters
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+characters.transcripts <- characters.transcripts.episode %>% 
+  unlist %>%
+  unique %>%
+  sort
+
+```
+
+
+## Export matched characters
+
+Export object with all characters
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+characters.transcripts %>%
+  write_rds("interim_output/characters_matched_transcripts.04.RDS")
+
+```
+
+
+Export object with character counts by episode
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+characters.transcripts.count %>%
+  write_rds("interim_output/characters_matched_transcripts_count_by_episode.04.RDS")
+
+```
+
+
