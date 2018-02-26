@@ -1,0 +1,141 @@
+---
+title: "Scrap deaths of characters in GoT"
+output:
+  html_document: default
+  html_notebook: default
+---
+
+
+```{r warning=FALSE, message=FALSE}
+
+library(knitr)
+library(xml2)
+library(rebus)
+library(stringr)
+library(rvest)
+library(magrittr)
+library(tidyverse)
+
+```
+
+```{r warning=FALSE, message=FALSE}
+
+if(!"interim_output" %in% list.files()){
+  
+  dir.create("interim_output")
+  
+}
+
+```
+
+Scrap web data of character deaths
+```{r warning=FALSE, message=FALSE}
+
+if(!"death.web.xml" %in% list.files("interim_output") ){
+
+death.web <- html("https://genius.com/Screen-genius-list-of-game-of-thrones-deaths-annotated")
+
+write_xml(death.web, "interim_output/death.web.xml")
+
+} else{
+  
+  death.web <- read_xml("interim_output/death.web.xml", as_html = T)
+  
+}
+
+```
+
+```{r warning=FALSE, message=FALSE}
+
+death.list <- list()
+
+nodes.df <- data_frame(nodes = c(4,6,8,10,12,14,16),
+                       season = str_c("season", 1:7, sep = "_"))
+
+for (i in 1:nrow(nodes.df)){
+
+death.list [[nodes.df[[i,"season"]]]] <- death.web %>% 
+  html_node(str_c("p:nth-child(",nodes.df[i,"nodes"], ")", sep = "") ) %>%
+  html_text() %>%
+  str_split(pattern = "Episode " ) %>% 
+  unlist() %>%
+  .[2:length(.)]
+  
+}
+
+```
+
+```{r warning=FALSE, results = 'hide', message=FALSE}
+
+death.list %<>% 
+  map(function(x) {str_split(x, pattern = rebus::or("\n.","\u2022") , simplify = T) %>%
+  as_data_frame() %>%
+  map_df(function(o){str_replace_all(o, pattern = rebus::or("\\n", "\""), replacement = "")}) %>%
+      separate(`V1`, into = c("episode_number", "episode_name"), sep = ":", remove = T)}) 
+  
+  
+death.list
+  
+```
+
+
+```{r eval=TRUE, results = 'hide', warning=FALSE, message=FALSE}
+
+death.df <- bind_rows(death.list, .id = "season")
+
+death.df %<>%
+  map_df(gsub, pattern = "^$", replacement = NA_character_)
+ 
+death.df
+
+```
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+rm(death.list, death.web, nodes.df)
+
+```
+
+# Exploration
+
+Check number of character deaths by season and ratio by number of episodes.
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+number.episodes <- death.df %>%
+  group_by(season) %>%
+  summarise(n_episodes = episode_number %>% as.numeric %>% max)
+
+```
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+death.df.long <- death.df %>%
+  gather(key = "key", value = "character", V2:V12) %>%
+  select(-key) %>%
+  arrange(season, episode_number %>% as.numeric) %>%
+  filter(!is.na(character))
+
+death.df.long %>% knitr::kable() 
+
+```
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+death.df.long %>%
+  count(season) %>%
+  left_join(number.episodes, by = "season") %>%
+  rename(total_deaths = n ) %>%
+  mutate(deaths_by_episode = (total_deaths/n_episodes) %>% round(1) )
+
+```
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+saveRDS(death.df, "interim_output/characters.death.wide.01.RDS")
+
+saveRDS(death.df.long, "interim_output/characters.death.long.01.RDS")
+
+```
+
+
+
