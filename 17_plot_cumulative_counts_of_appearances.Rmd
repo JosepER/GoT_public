@@ -1,0 +1,211 @@
+---
+title: "17_plot_cumulative_counts_of_appearances"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r}
+
+rm(list = ls())
+
+library(RColorBrewer)
+library(stringr)
+library(ggplot2)
+library(magrittr)
+library(tidyverse)
+
+options(scipen = 9999)
+
+```
+
+# Import data
+
+## Non-imputed relative transcript appearances data
+```{r}
+
+char_estimated_alive_cumulative_counts_wide <- 
+  read_rds("counts/alive/estimated_clean_alive_cumulative_proportions_wide_by_episode_11.RDS")
+
+```
+
+## Imputed relative transcript appearances data
+
+
+
+
+## Summaries of IMDB cast appearances by character
+
+This includes sum of counts, sum of counts by season and mean number of transcript appearances per imdb cast appearance.
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+char_counts_imdb_summary <- read_rds("interim_output/imdb_summary_counts/imdb_counts_and_means_10.RDS")
+
+```
+
+## List of missing episodes
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+episode_list_df <- readRDS("interim_output/episode_list_transcripts_03.RDS")
+
+episode_list_df
+
+```
+
+
+# Compute non-imputed dataset to plot relative appearances
+Ideally, and especially for a plot, appearances in each episode should sum to 1
+
+To do The graph should:
+__MAIN__
+* show some comparison between dead and alive characters
+
+
+__SECONDARY__
+
+
+## Labels x scale for the plot
+```{r}
+
+labels_x_scale <- char_estimated_alive_cumulative_counts_wide %>%
+  names() %>% str_subset(pattern = "^s\\d{2}e\\d{2}$")
+
+names_labels_x_scale <- labels_x_scale %>% 
+  str_extract(pattern = "^s\\d{2}e01$") 
+
+names_labels_x_scale <- if_else(!is.na(names_labels_x_scale),
+                                true = names_labels_x_scale,
+                                false = "")
+
+names(labels_x_scale) <- names_labels_x_scale
+
+```
+
+
+
+## Pick 'top n' characters with highest proportion of appearances at any time 
+
+I need to compute this from imputed counts.
+
+To do: it's curious what the cutoff_cast_appearances for top 20 indicates. Are seasons 6 and 7 more disperse in terms of _cast_ appearances?
+```{r}
+
+top_number <- 15
+
+#seasons <- char_counts_imdb_summary %>%
+ # ungroup %>%
+  #select(ends_with("_sum_imdb_cast")) %>%
+  #names()
+
+## first x episodes can be excluded to avoid inserting characters which are not really main characters.
+
+excluded_first_episodes <- c("s01e01", "s01e02", "s01e03")
+
+
+## this table shows the maximum proportion each character achieved (in terms of estimated cumulative proportions)
+char_max_proportion_cumulative_counts <- char_estimated_alive_cumulative_counts_wide %>%
+  gather(key = "episode", value = "proportion", matches(match = "^s\\d{2}e\\d{2}$")) %>%
+   filter(!episode %in% excluded_first_episodes) %>%
+  group_by(character.names.wikipedia, identifier) %>%
+  summarise(max_proportion = max(proportion, na.rm = T)) %>%
+  arrange(desc(max_proportion)) 
+ 
+# identifiers of characters arranged according to 
+char_estimated_alive_cumulative_counts_arranged_id <- char_max_proportion_cumulative_counts %$%
+  identifier
+ 
+selected_characters_graph_df <- data_frame(identifier = char_estimated_alive_cumulative_counts_arranged_id,
+                                           row_ =  1:length(char_estimated_alive_cumulative_counts_arranged_id))
+  
+char_estimated_alive_cumulative_counts_wide_for_plot <- char_estimated_alive_cumulative_counts_wide %>%
+  left_join(selected_characters_graph_df, by = "identifier") %>%
+  arrange(row_)
+
+rm(selected_characters_graph, excluded_first_episodes)
+
+```
+
+
+
+
+## Delete missing episodes
+
+```{r}
+
+vector_missing_episodes <- (episode_list_df$link == "missing episode") 
+
+char_estimated_alive_cumulative_counts_wide_for_plot[,which(vector_missing_episodes)+2] <- NA
+
+qual_col_pals <- brewer.pal.info[brewer.pal.info$category == 'qual',]
+col_vector <- unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals)))
+
+  ## delete from labels as well
+
+labels_x_scale <- labels_x_scale[!vector_missing_episodes]
+
+```
+
+
+
+# Plot cumulative counts (for alive characters only)
+```{r}
+
+top_char_estimated_alive_cumulative_counts_wide <- char_estimated_alive_cumulative_counts_wide_for_plot %>%
+  head(top_number)
+  
+  top_char_estimated_alive_cumulative_counts_wide %>%
+  gather(key = "season_episode", value = "prop", starts_with("s") ) %>%
+  mutate(prop = prop * 100) %>%
+  filter(!is.na(prop)) %>%
+  ggplot(aes(x = factor(season_episode), y = prop, group = as_factor(character.names.wikipedia), col = as_factor(character.names.wikipedia) )) +
+  ggplot2::geom_line(size = 2) +
+  scale_color_manual(values=col_vector) +
+  scale_x_discrete(labels = labels_x_scale %>% names) +
+  labs(x = "Episode", y = "% appearances", col = "Character")
+
+```
+
+To do: I probably need to explore most transcript appearances 'in any given season' for those seasons where we have good data. The cool part would be to plot both alive and dead characters.
+
+Prepare graph data so I have to do less steps in Shiny app.
+```{r}
+
+char_estimated_alive_cumulative_counts_wide_for_shiny <- char_estimated_alive_cumulative_counts_wide_for_plot %>%
+  gather(key = "season_episode", value = "prop", starts_with("s") ) %>%
+  mutate(proportion = prop * 100) %>% 
+  filter(!is.na(proportion)) %>% #these NAs are imputed NAs. This is because in the 'alive' appearances I imputed NAs after death of character. 
+  ungroup %>%
+  mutate(episode = factor(season_episode),
+         character = as_factor(character.names.wikipedia)) %>%
+  select(-season_episode, -character.names.wikipedia)
+
+# cut to a max of 100 chars
+
+char_estimated_alive_cumulative_counts_wide_for_shiny %<>%
+  filter(row_ <= 100)
+
+```
+
+
+
+# Export auxiliary tools for Shiny app
+```{r}
+
+if(!"interim_output/shiny_app" %in% list.dirs("interim_output")){
+  
+  dir.create("interim_output/shiny_app")
+  
+}
+
+export_for_shiny <- list(char_counts = char_estimated_alive_cumulative_counts_wide_for_plot,
+                         labels_x_scale = labels_x_scale,
+                         col_vector = col_vector,
+                         vector_missing_episodes = vector_missing_episodes,
+                         plot_data = char_estimated_alive_cumulative_counts_wide_for_shiny) 
+
+export_for_shiny %>%
+  write_rds("interim_output/shiny_app/export_for_shiny_17.rds")
+
+```
+
+
