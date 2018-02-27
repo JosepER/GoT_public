@@ -1,0 +1,710 @@
+---
+title: "10_compare_counts_with_other_data"
+output:
+  html_document: default
+  html_notebook: default
+---
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+rm(list = ls())
+
+library(labelled)
+library(RCurl)
+library(stringr)
+library(rebus)
+library(magrittr)
+library(tidyverse)
+
+```
+
+
+# Import data
+
+## Previously computed data
+Character appearences by episode
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+char_counts_by_episode <- readRDS("counts/transcripts/counts_by_episode_07.RDS")
+
+```
+
+Character appearences by season
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+estimated_counts_by_season <- readRDS("counts/transcripts/estimated_counts_by_season_07.RDS")
+
+```
+
+
+List of all wikipedia characters (includes character deaths)
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+all_characters <- readRDS("interim_output/characters.all.map.06.RDS") %>%
+  select(character.names.wikipedia, identifier, appears_in_transcripts, died, 
+         season_death, episode_number_death)
+
+```
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+# to check episode links
+
+episode_list <- readRDS("interim_output/episode_list_transcripts_03.RDS")
+
+```
+
+
+## Github screen time data  
+This is data originaly collected by an IMDB user called 'ninewheels0'. I can not retreive the original page where times were posted. There is, however, a copy of the dataset by season in a github account. 
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+if(!"./data" %in% list.dirs() ){
+  
+  dir.create("data/")
+  
+}
+
+if(!"github_screen_time_data_10.csv" %in% list.files("data/")){
+
+screen_time_data <- read_csv("https://raw.githubusercontent.com/Preetish/GoT_screen_time/master/datasets/GoT_actors.csv")
+
+screen_time_data %>%
+  write_csv("data/github_screen_time_data_10.csv")
+
+}else{
+  
+  screen_time_data <- read_csv("data/github_screen_time_data_10.csv")
+  
+}
+
+```
+
+## IMDB data for cast
+This is data from IMDB.com cast for all episodes.
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+all_seasons_cast_imdb_df <- read_rds("interim_output/all_seasons_cast_imdb_df_09.RDS")
+
+```
+
+
+# Data management
+
+Recode episode of death
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+all_characters %<>%
+  mutate(episode_death = str_c("s0", 
+                               str_extract_all(season_death, pattern = "\\d$", simplify = T), 
+                               "e", 
+                               if_else(episode_number_death == 10,
+                                       true = episode_number_death,
+                                       false = str_c("0", episode_number_death)))) %>%
+  select(-season_death, -episode_number_death)
+
+all_characters
+
+```
+
+
+# Checks 
+
+## Post-mortem appearances
+
+Check if any character appears after they died 
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+deaths <- all_characters %>%
+  filter(died == 1 & appears_in_transcripts == 1) %>%
+  select(character.names.wikipedia, identifier, episode_death)
+  
+# counts to long and merge with deaths
+
+char_counts_by_episode_long <- char_counts_by_episode %>%
+  gather(key = "season_episode", value = "appearances", 
+         -character.names.wikipedia, -identifier) %>%
+  arrange(identifier, season_episode)
+
+# compute episode of death 
+
+char_counts_by_episode_long %<>%
+  left_join(deaths %>% select(identifier, episode_death), by = "identifier") %>%
+  mutate(episode_death = if_else(season_episode == episode_death,
+                                 true = 1,
+                                 false = 0))
+
+# signal all episodes where character should be dead
+
+number_episodes <- char_counts_by_episode %>% 
+  select(-character.names.wikipedia, -identifier) %>% 
+  ncol()
+
+number_characters <- char_counts_by_episode %>%
+  nrow
+
+char_counts_by_episode_long %<>%
+  mutate(episode_numeric_seq = rep(seq(1, 67, 1), times = number_characters)) 
+
+last_episode_alive <- char_counts_by_episode_long %>%
+  filter(episode_death == 1) %>%
+  select(identifier, episode_numeric_seq) %>%
+  rename(last_episode = episode_numeric_seq)
+
+char_counts_by_episode_long %<>%
+  left_join(last_episode_alive) %>% 
+  mutate(dead = episode_numeric_seq > last_episode) 
+
+#check if post-mortem appearences
+
+char_counts_by_episode_long %<>% 
+  select(-episode_death, -episode_numeric_seq, -last_episode)
+
+post_mortem_appearances <- char_counts_by_episode_long %>%
+  filter(dead == T & appearances > 0)
+
+post_mortem_appearances %>%
+  write_rds("interim_output/post_mortem_appearances_10.RDS")
+
+```
+
+* Jon Snow does die and appear after death. I think I should remove him from deaths as they don't 'kill' the character in cinematic terms.
+* Rodrik Cassel appears in s06e02. It's Bran's flashback.
+
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+post_mortem_appearances %>%
+  select(-dead) %>%
+  spread(key = "season_episode", value = appearances)
+
+```
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+rm(post_mortem_appearances, last_episode_alive,
+   number_characters, number_episodes, deaths)
+
+```
+
+TO DO: will I need previous used objects (all_characters, epsidode_list, char_counts_by_episode)
+
+# Compare my transcript counts with downloaded screen times
+
+Change names in downloaded screen times to match the names in wikipedia
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+screen_time_data %<>%
+  mutate(actor = actor %>% 
+           toupper() %>% 
+           str_replace(pattern = rebus::or("'[[:print:]]*' ", "GRAND MAESTER ",
+                                           "LORD ", "MAESTER " ),
+                       replacement =  ""))
+
+```
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+screen_time_data$actor[which(screen_time_data$actor == "THE WAIF")] <- "WAIF"
+
+```
+
+Add a sufix ('st') to columns from downloaded screen times. Also, replace ' ' with '_'.
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+names(screen_time_data)[2:ncol(screen_time_data)] <- 
+  str_c(names(screen_time_data)[2:ncol(screen_time_data)], "_st")
+
+names(screen_time_data) <- names(screen_time_data) %>%
+  str_replace_all(pattern = " ", replacement = "_")
+
+```
+
+
+
+## Merge transcript (estimated) counts with screen time
+ 
+Estimated counts by season dataset to long
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+seasons_transcript <- str_which(estimated_counts_by_season %>% names, 
+                                 pattern = "^s\\d{2}$")
+
+seasons_transcript_min <- seasons_transcript %>%
+  min()
+
+seasons_transcript_max <- seasons_transcript %>%
+  max()
+
+estimated_counts_by_season_long <- estimated_counts_by_season %>%
+  gather(key = season, value = "estimate_transcript", seasons_transcript_min:seasons_transcript_max)
+
+rm(seasons_transcript, seasons_transcript_min, seasons_transcript_max)
+
+estimated_counts_by_season_long
+
+```
+
+Screen time data to long. Also, recode column names.
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+seasons_st <- str_which(screen_time_data %>% names, 
+                                 pattern = "_\\d_st$")
+
+names(screen_time_data)[seasons_st] <- str_c("s0", 1:length(seasons_st))
+
+seasons_st_min <- seasons_st %>%
+  min()
+
+seasons_st_max <- seasons_st %>%
+  max()
+
+screen_time_data_long <- screen_time_data %>%
+  gather(key = "season", value = "screen_time_data", seasons_st_min:seasons_st_max)
+
+screen_time_data_long
+
+rm(seasons_st, seasons_st_min, seasons_st_max)
+
+```
+
+Export cleaned screen time data long file
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+screen_time_data_long %>%
+  write_rds("interim_output/screen_time_data_clean_long_10.RDS")
+
+```
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+estimated_counts_by_season_wth_st <- estimated_counts_by_season_long %<>%
+  inner_join(screen_time_data_long, by = c("character.names.wikipedia" = "actor", "season"))
+
+```
+
+## Plot estimated transcript counts vs screen time
+Summary of missing episodes per season
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+episode_list %>%
+  mutate(na_ = if_else(link == "missing episode", true = 1, false = 0)) %>%
+  group_by(season) %>%
+  summarise(n_episodes = n(),
+           na_episodes = sum(na_),
+           prop_na_episodes = round(mean(na_), 2))
+
+```
+
+This plot shows that:
+* The number of appearences in transcripts and screen time are strongly correlated;
+* the correlation does not hold in those seasons where there are many missing episodes (s02, s03 and s04). In these, transcripts have 0s (which are really NAs) and screen times have a real value;
+* Even in seasons with no missing values we have certain characters which look like they appear in screen time but not in transcritps (weird!). I should double-check that.
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+estimated_counts_by_season_wth_st %>%
+  ggplot(aes(x = estimate_transcript, y = screen_time_data)) +
+   facet_wrap(~season)+ 
+  geom_jitter()
+
+```
+
+# Compare my transcript counts with IMDB cast data
+
+## Try to merge datasets
+
+Some characters are unmatched. They are mostly secondary characters. Here I will ignore them as I do not have (immediately available) data about their death and participation (apart from number of episodes in which they participated. 
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+unmatched_chars <- (all_seasons_cast_imdb_df$character_cast[!all_seasons_cast_imdb_df$character_cast %in% all_characters$character.names.wikipedia]) %>%
+  unique %>% sort()
+
+unmatched_df <- all_seasons_cast_imdb_df %>%
+  filter(character_cast %in% unmatched_chars) %>%
+  arrange(character_cast) 
+
+unmatched_df %>%
+  write_rds("interim_output/unmatched_imdb_cast.RDS")
+
+unmatched_df
+
+```
+
+## Check whether IMDB only characters appear in  missing episodes
+
+The idea is to add to the list of all characters only those unmatched cast that appears in missing episodes. The reasoning behind this is that these might have 0 participations in non-missing episodes but NAs in missing ones. 
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+missing_episodes_vect <- episode_list %>%
+  filter(link == "missing episode") %>%
+  mutate(season = str_extract(season, pattern = "\\d"), 
+         season_episode = str_c(season, episode_number, sep = "_")) %$%
+  season_episode
+  
+unmatched_df %<>%
+  mutate(season_episode = str_c(season, episode, sep = "_"))
+
+```
+
+These 9 unique characters from IMDB cast should be added to the list of all characters. 
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+unmatched_in_missing_episodes_df <- unmatched_df %>%
+  filter(season_episode %in% missing_episodes_vect)
+
+unmatched_in_missing_episodes_df
+
+```
+
+## Update list of all characters
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+first_vect <- (max(all_characters$identifier) + 1)
+
+last_vect <- first_vect+(length(unmatched_in_missing_episodes_df$character_cast %>% unique))-1
+
+identifier_vect <- first_vect:last_vect
+
+```  
+
+Check episode of death of new characters
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+unmatched_in_missing_episodes_df <- tibble::tribble(
+  ~character.names.wikipedia, ~appears_in_transcripts, ~died, ~episode_death,
+                "BERNADETTE",                       0,     0,             NA,
+                     "COLEN",                       0,     0,             NA,
+         "DESMOND CRAKEHALL",                       0,     0,             NA,
+                    "GERALD",                       0,     0,             NA,
+              "IMRY FLORENT",                       0,     0,             NA,
+                   "MIRELLE",                       0,     0,             NA,
+                    "TIMETT",                       0,     0,             NA,
+                    "VIOLET",                       0,     1,       "s05e06") %>%
+  mutate(identifier = identifier_vect)
+
+```
+
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+all_characters %<>%
+  bind_rows(unmatched_in_missing_episodes_df)
+
+```
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+rm(unmatched_in_missing_episodes_df, unmatched_df, unmatched_chars, identifier_vect, 
+   first_vect, last_vect, 
+   rows_to_delete, missing_episodes_vect)
+
+```
+
+## Check wikipedia characters that do not appear in IMDB cast
+
+These might be characters which are uncredited (e.g. animals), appear in IMDB under a general name (e.g. BARRA = baby or BORBA = prostitute) or are not part of the cast (e.g. Viserion = dragon).
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+unmatched_in_wikipedia <- all_characters$character.names.wikipedia[!all_characters$character.names.wikipedia %in% all_seasons_cast_imdb_df$character_cast] %>%
+  sort()
+
+unmatched_in_wikipedia %>%
+  write_rds("interim_output/from_imdb_unmatched_in_wikipedia.RDS")
+
+all_characters %>%
+  filter(character.names.wikipedia %in% unmatched_in_wikipedia)
+
+```
+
+
+## Check for mismatches between imdb data and counts from transcripts
+1) episodes where there should be 0 counts according to imdb. 
+2) episodes where there should be counts > 0 according to imdb.
+
+### Episodes where there should be 0 counts according to IMDB
+There should be none of these!
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+all_seasons_cast_imdb_df %<>%
+  mutate(season = if_else(as.numeric(season) < 10,
+                          true = str_c("0", season),
+                          false = season %>% as.character),
+         episode = if_else(as.numeric(episode) < 10,
+                           true = str_c("0", episode),
+                           false = episode %>% as.character),  
+    season_episode_imdb = str_c("s",season, "e", episode),
+    cast_imdb = 1) %>%
+  select(-season, -episode) %>%
+  arrange(character_cast, season_episode_imdb)
+  
+```
+
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+char_counts_by_episode_long_with_imdb <-  char_counts_by_episode_long %>%
+  left_join(all_seasons_cast_imdb_df, 
+            by = c("character.names.wikipedia" = "character_cast", "season_episode" = "season_episode_imdb"))
+
+```
+
+
+Less important: Characters which appear in transcripts but not in IMDB (should already be in the previous list of unmatched characters in wikipedia). I will not be able to say that these characters appeared/did not appear in a given episode.
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+char_counts_by_episode_long_with_imdb %>%
+  group_by(character.names.wikipedia) %>%
+  summarise(total_imdb = sum(cast_imdb, na.rm = T) ) %>%
+  filter(is.na(total_imdb) | total_imdb == 0) %>%
+  arrange(character.names.wikipedia)
+
+```
+
+Characters which appear in transcripts but are not in IMDB cast for that episode. There are none! 
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+char_counts_by_episode_long_with_imdb %>%
+  filter(appearances > 0, !is.na(appearances), cast_imdb == 0)
+
+```
+
+Create a test for future updates
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+test <- char_counts_by_episode_long_with_imdb %>%
+  filter(appearances > 0, !is.na(appearances), cast_imdb == 0) %>% 
+  nrow
+
+if(test > 0){
+  
+  stop("Test failed: There shouldn't be any appearance in transcript that is not in IMDB cast for that episode")
+  
+}
+
+rm(test)
+
+```
+
+### Episodes where there could be counts in transcripts according to IMDB cast but there are none
+This might be because character appeared in episode but did not say any line. 
+TO DO: ideally I should do a manual double-check of these. Just to make sure I did not miss any appearance count. 
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+char_counts_by_episode_long_with_imdb %>%
+  filter(!is.na(cast_imdb), cast_imdb == 1, appearances == 0)
+
+```
+
+
+# Impute 0s in episode counts 
+
+Right now I only have '1' in cast_imdb column of 'char_counts_by_episode_long_with_imdb' for those that appeared and NAs for all others. I need to place 0s to all those that I know don't appear in IMDB cast of that episode. To do this, I will assing 0s to all those that currently have NAs and were matched at least once in all_characters and IMDB datasets.
+
+The names I will not be able to say if they appeared or not in a given episode (they did not appear in any IMDB cast under this name).
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+char_counts_by_episode_long_with_imdb %>%
+  filter(character.names.wikipedia %in% unmatched_in_wikipedia) %$%
+  character.names.wikipedia %>%
+  unique
+  
+```
+
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+char_counts_by_episode_long_with_imdb %<>%
+  mutate(cast_imdb = if_else(is.na(cast_imdb) & !(character.names.wikipedia %in% unmatched_in_wikipedia),
+                             true = 0,
+                             false = cast_imdb),
+         appearances = if_else(is.na(appearances) & cast_imdb == 0,
+                               true = 0,
+                               false = appearances) )
+
+
+```
+
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+rm(unmatched_in_wikipedia)
+
+```
+
+Change NAs in dead for FALSE. This is because if a character is not in the list of dead people 
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+char_counts_by_episode_long_with_imdb %<>%
+  mutate(dead = if_else(is.na(dead),
+                        true = F,
+                        false = dead))
+
+```
+
+
+# Count sum of character IMDB appearances and mean appearances
+
+TO do: export these summary statistics in a separate RDS object
+**compute total number of IMDB cast appearances by character**
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+char_counts_imdb_summary <- char_counts_by_episode_long_with_imdb %>%
+  group_by(character.names.wikipedia, identifier) %>%
+  summarise(sum_imdb_cast = sum(cast_imdb))
+
+char_counts_imdb_summary
+
+```
+
+**compute character total number of IMDB appearances in each season **
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+ char_counts_imdb_season <- char_counts_by_episode_long_with_imdb %>%
+  mutate(season = str_c(str_extract(season_episode, pattern = "^s\\d{2}"), "_sum_imdb_cast" ) ) %>%
+  group_by(character.names.wikipedia, season) %>%
+  summarise(sum_imdb_cast_season = sum(cast_imdb)) %>%
+  spread(key = season, value = sum_imdb_cast_season)
+
+char_counts_imdb_season
+
+```
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+char_counts_imdb_summary %<>%
+  left_join(char_counts_imdb_season, by = "character.names.wikipedia")
+
+```
+
+**compute character mean number of transcript counts by cast appearance (only for non-missing episodes) **
+Maybe include label to detail what the variable means. 
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+char_mean_appearances_by_imdb_cast_episode <- char_counts_by_episode_long_with_imdb %>%
+  filter(!is.na(appearances), cast_imdb == 1) %>% 
+  group_by(character.names.wikipedia) %>%
+  summarise(mean_appearances_imdb_episode = mean(appearances)) 
+  
+char_mean_appearances_by_imdb_cast_episode
+
+```
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+char_counts_imdb_summary %<>%
+  left_join(char_mean_appearances_by_imdb_cast_episode, by = "character.names.wikipedia")
+
+rm(char_mean_appearances_by_imdb_cast_episode)
+
+```
+
+**compute character mean number of transcript counts by cast appearance by season (only for non-missing episodes)**
+I will impute a 0 for those seasons where the character had 0 appearances.
+
+Introduce label as computation of variable is slightly complicated.
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+start_seasons_col <- names(char_counts_imdb_season) %>%
+  str_which(pattern = "s\\d{2}_sum_imdb_cast$") %>%
+  min
+
+end_seasons_col <- names(char_counts_imdb_season) %>%
+  str_which(pattern = "s\\d{2}_sum_imdb_cast$") %>%
+  max
+
+char_counts_imdb_season_long <- char_counts_imdb_season %>%
+  gather(key = "season", value = "imdb_cast_season", start_seasons_col:end_seasons_col) %>%
+  mutate(key = str_extract(season, pattern = "^s\\d{2}") ) %>%
+  select(-season) %>%
+  arrange(character.names.wikipedia)
+
+char_mean_appearances_by_imdb_cast_season <- char_counts_by_episode_long_with_imdb %>%
+  mutate(season = str_c(str_extract(season_episode, pattern = "^s\\d{2}"), "_mean_apearances" ) ) %>%
+  filter(!is.na(appearances), cast_imdb == 1) %>% 
+  group_by(character.names.wikipedia, season) %>%
+  summarise(mean_appearances_imdb = mean(appearances)) %>%
+  mutate(key = str_extract(season, pattern = "^s\\d{2}")) 
+
+
+char_mean_appearances_by_imdb_cast_season %<>%
+  full_join(char_counts_imdb_season_long, by = c("character.names.wikipedia", "key")) %>%
+  mutate(season = str_c(key, "_mean_apearances") ) %>%
+  select(-key) %>%
+  mutate(mean_appearances_imdb = if_else(imdb_cast_season == 0,
+                                         true = 0,
+                                         false = mean_appearances_imdb)) %>%
+  arrange(character.names.wikipedia, season)
+
+char_mean_appearances_by_imdb_cast_season %<>%
+  select(-imdb_cast_season) %>%
+  spread(key = season, value =  mean_appearances_imdb)
+  
+char_mean_appearances_by_imdb_cast_season # merge with summary
+
+```
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+char_counts_imdb_summary %<>%
+  left_join(char_mean_appearances_by_imdb_cast_season, by = "character.names.wikipedia")
+
+rm(char_counts_imdb_season, char_counts_imdb_season_long, start_seasons_col,
+   end_seasons_col)
+
+```
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+if(!"imdb_summary_counts" %in% list.files("interim_output/")){
+  
+  dir.create("interim_output/imdb_summary_counts")
+  
+}
+
+```
+
+# Export data
+
+Export counts by season with screen time column
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+estimated_counts_by_season_wth_st %>%
+  write_rds("counts/transcripts/counts_by_season_long_with_screentime_10.RDS")
+
+```
+
+Export episode counts with IMDB imputed 0s
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+char_counts_by_episode_long_with_imdb %>%
+  write_rds("counts/transcripts/counts_by_episode_long_with_imdb_10.RDS")
+
+```
+
+
+Export updated list of all characters.
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+all_characters %>%
+  write_rds("interim_output/characters.all.map.10.RDS")
+
+```
+
+Export summary of imdb appearances
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+char_counts_imdb_summary %>% 
+  write_rds("interim_output/imdb_summary_counts/imdb_counts_and_means_10.RDS")
+
+```
+
+TO DO: double check who appeared in screen time but not in transcripts in s01, s06 and s07. 
+
+
