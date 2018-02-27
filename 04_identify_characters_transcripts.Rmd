@@ -1,8 +1,8 @@
 ---
 title: "04_Identify characters in transcripts"
-output: html_notebook
-editor_options: 
-  chunk_output_type: inline
+output:
+  html_document: default
+  html_notebook: default
 ---
 
 # Prepare session
