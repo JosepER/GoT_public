@@ -1,0 +1,1132 @@
+---
+title: "06_Clean characters matched in transcripts"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+rm(list = ls())
+
+library(readr)
+library(stringr)
+library(rebus)
+library(magrittr)
+library(tidyverse)
+
+```
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+episode.list.df <-  read_rds("interim_output/episode_list_transcripts_03.RDS")
+
+characters.dead <- read_rds("interim_output/characters.death.long.02.RDS")
+
+characters.all <- read_rds("interim_output/characters.all.02.RDS") %>%
+  unique() #apparently downloaded characters are not unique
+
+characters.transcripts <- read_rds("interim_output/characters_matched_transcripts.04.RDS")
+
+```
+
+```{r eval=FALSE, warning=FALSE, message=FALSE}
+
+characters.transcripts %>% sort()
+
+```
+
+# Clean names in transcritpts
+
+## Check names which are very long
+Delete names which are too long (more than 3 words). These are not characters.
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+characters.transcripts %>% 
+  str_count('\\w+') %>%
+  table()
+
+```
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+index.long <- characters.transcripts %>% 
+  str_count('\\w+') > 3
+
+index.long %<>% 
+  which()
+
+index.hugh <- characters.transcripts %>%
+  str_which("HUGH OF THE VALE")
+
+index.long <- index.long[!index.long %in% index.hugh]
+
+```
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+characters.transcripts <- characters.transcripts[-index.long]
+
+rm(index.hugh, index.long)
+
+```
+
+
+## Do a quick clean of characters in transcripts
+
+Delete prefix such as: 'young', 'lady', 'maester', 'ser' and 'lord'.
+Careful with:
+* Removing pattern 'SER ' would cut the end of 'ALLISER';
+* Removing pattern 'LADY ' would also remove it from 'LADY CRANE', which exists in the list of all characters;
+* Removing pattern 'LORD ' would also remove it from 'LORD OF BONES', which exists in the list of all characters. Removing pattern 'LORD' also causes confusion as we can latter not distinguish between 'LORD KARSTARK' (i.e. Rickard Karstark) and Harald Karstark (named as 'Karstark' in season 6). Removing the same pattern in 'LORD MORMONT' makes it impossible to distinguish between 'Jeor Mormont' (aka Lord Mormont) and 'Jorah Mormont';
+* Removing pattern 'YOUNG' creates confusion as 'YOUNG LYANNA' (i.e. Lyanna Stark) gets the same name as 'LYANNA' (i.e. Lyanna Mormont).
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+prefix.patterns <- rebus::or("LORD ", "MAESTER ", "^SER ", "YOUNG ",
+                             "LADY ")
+
+characters.transcripts %>%
+  str_subset(pattern = rebus::or("LORD ", "MAESTER ",
+                                 "SER ", "YOUNG ", #careful when removing SER!
+                                 "LADY ", # Lady Crane exists in the wikipedia list! Can not blindly remove LADY.
+                                 "GRAND")) %>%
+  sort
+  
+```
+
+We need to create a new column with cleaned names. In the end we will have to match the same pattern as used before.
+
+
+**TO DO: add cleaned patterns in a new column**
+Check wikipedia characters
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+characters.all %>% 
+  toupper() %>%
+  str_subset(pattern = prefix.patterns)
+
+```
+
+Where is Ebrose in scrapped characters? It's under the name 'Marwyn'.
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+characters.transcripts %>% 
+  str_which("EBROSE")
+
+characters.transcripts %>% 
+  str_which("MARWYN")
+
+```
+
+We will skip those rows when when removing the patterns.
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+name. <- vector(mode = "character", length = 1)
+
+error.sources.pattern. <- rebus::or("LADY CRANE", "ARCHMAESTER",
+                                    "LORD OF BONES", "LORD KARSTARK",
+                                    "YOUNG LYANNA", "LORD MORMONT",
+                                    "LORD BOLTON")
+
+characters.transcripts.cleaned <- characters.transcripts
+
+for(i in seq_along(characters.transcripts)){
+  
+  name. <- characters.transcripts[i]
+  
+  if(name. %>% str_detect(pattern = error.sources.pattern.)){
+    
+    next()
+  
+  }else{
+      
+    characters.transcripts.cleaned[i] <-  name. %>%
+      str_replace_all(pattern = prefix.patterns,
+                                     replacement = "")
+    }
+  
+}
+
+rm(name., error.sources.pattern., i)
+
+```
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+characters.transcripts.df <- data_frame(characters.transcripts.original = characters.transcripts,
+                                        characters.transcripts.cleaned = characters.transcripts.cleaned) %>%
+  arrange(characters.transcripts.original)
+
+rm(characters.transcripts)
+
+```
+
+Delete objects which are obviously not characters
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+delete.non.characters <- c("A VOICE", "ALL", "ALL THREE", "ALL TOGETHER", 
+                           "ANNOUNCER", "ANNOUNCER ",
+  "ARCHERS", "ARYA TURNS AND EXITS THE INNCUT TO", "ASSASSIN", "ATTENDANT", 
+  "BANKER", "BLACK HAIRED PROSTITUTE", "BLONDE PROSTITUTE", "BOLTON BANNERMAN",
+  "BOLTON OFFICER", "BOTH JON AND SAM", "BOY","BRAAVOSI MAN", "BROTHEL KEEPER",
+  "BROTHER", "BROTHERS", "BUER", "BUYER", "BYSTANDERS", "CAPTAIN", "CHILD OF THE FOREST",
+  "CLIENT", "CROWD", "CUT TO", "DAUGHTER", "DOTHRAKI MAN", "DOTHRAKI MATRON", 
+  "DOTHRAKI WOMAN", "EVERYONE", "FREY GUARD", "GIANT", "GIRL", "GLOVER", 
+  "GOLD CLOAK", "GUARD", "GUARD CAPTAIN", "HANDMAIDEN", "HARPY ", "HEAD", 
+  "HEAD PROSTITUTE", "HOODED FIGURE", "HUNTERS", "KINGS GUARD", "KINGSGUARD",
+  "KNIGHT", "KNIGHT OF HOUSE BRACKEN", "LANNISTER SCOUT", "LANNISTER SOLDIER ",
+  "LEADER", "LISTENERS ", "BOLTON", "MAID", "MAN", "MASTER", "MASTER OF ARMS",
+  "MEN", "MERCHANT", "MESSENGER", "MISTRESS", "OFFICER", "OLD MAN", "OWNER", "PLEASE NOTE", 
+  "POPULACE", "PRIEST", "PRIESTESS", "PROSTITUTE", "RED PRIEST", "RED PRIESTESS", 
+  "REMEMBER THIS", "RIDER", "SLAVE BUYER", "SLAVE OWNER", "SLAVER", "SOLDIER",
+  "SPARROW", "SQUIRE", "STABLE BOY", "STARK GUARD", "STEWARD", 
+  "STEWARD OF HOUSE STARK", "STORYTELLER", "STRONG", "SURVIVOR",
+  "TELL ME SOMETHING", "THE GROUP", "THE OTHERS AT THE TABLE", 
+  "THEON COVERS THE MAP WITH PAWNSGREATJON UMBER", "THIN MAN", "TOGETHER",
+  "TRIBESMEN OF THE VALE", "VOICES OUTSIDE", "WAITRESS", "WATCHMAN",
+  "WILDLING", "WILDLING ELDER", "WINE MERCHANT", "WOMAN", "MAN", 
+  "EVERYBODY", "FAIR TRIAL", "FIRST LESSON", "I BEG YOU", "OF HOUSE FREY",
+  "PIG FARMER", "SHOUTING", "THE TRUTH NOW", "WE ASK AGAIN", "WHO WILL TRIUMPH",
+  "M WRONG", "S LANDING BAKER", "S LANDING PAGE", "S TOWN WHORE",
+  "S WATCH", "S WATCHERS", "STREET URCHIN", "AND GRENN", "EXT WINTERFELL", "SEPTON") %>%
+  str_trim(side = "right") %>%
+  unique()
+
+```
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+characters.transcripts.df %<>%
+  filter(!characters.transcripts.original %in% delete.non.characters)
+
+```
+
+Carefully delete also those that have these patterns typical of non-characters
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+delete.non.characters.names <- characters.transcripts.df$characters.transcripts.original%>% str_subset(pattern = rebus::or1(delete.non.characters))
+
+delete.non.characters.index <- characters.transcripts.df$characters.transcripts.cleaned %>% str_which(pattern = rebus::or1(delete.non.characters))
+
+not.to.delete <- rebus::or("ALLIS", "MANCE", "MANDERLY", "SMALLJON",
+                           "ROBETT GLOVER", "TALLA", "TOMMEN", "LORD BOLTON")
+  
+delete.non.characters.patterns.df <- data_frame(delete.non.characters.names, delete.non.characters.index) %>% arrange(delete.non.characters.names) 
+
+delete.non.characters.patterns.df %<>%
+  filter(!delete.non.characters.names %>% str_detect(not.to.delete))
+
+delete.non.characters.patterns.df
+
+```
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+characters.transcripts.df %<>%
+  filter(!characters.transcripts.original %in% delete.non.characters.patterns.df$delete.non.characters.names)
+
+```
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+rm(delete.non.characters, delete.non.characters.index, delete.non.characters.names,
+   delete.non.characters.patterns.df)
+
+```
+
+
+**Create a data frame that maps the original names that appear in the transcripts with their cleaned version**
+Orignal names contain spelling mistakes or different versions of the name than those in the scrapped wikipedia list.
+
+
+**Create table with manual replacements**
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+original. <- c(rebus::or("ALLITHORNE", "ALLITHRONE", "ALLISTER"),
+               rebus::or("BAELISH", "LITTLEFINGER"),
+               "BLACK WALDER",
+               "BLACKFISH",
+               rebus::or("BRAND", "BRANN"),
+               "BRIENNE",
+               "CASSEL",
+               rebus::or("DAERNEYS", "DANERYS"),
+               rebus::or("DARIO", "DARRIO"),
+               rebus::or("DOLOROUS EDD", "EDDARDDISON TOLLETT", exactly("ED"), exactly("EDD")),
+               rebus::or("NED", exactly("YOUNG NED")),
+               rebus::or("ELARIA", "ELLIA"),
+               "EYED RAVEN",
+               "GREYWORM",
+               rebus::or("PYCELL", "PYRCELLE", "PYCELLEE"),
+               "MELISDANDRE",
+               "MHAEGAN",
+               "MOSADOR",
+               "MOUNTAIN",
+               "OLEANNA",
+               "OTHELL YARWICK",
+               rebus::or("SAM", "SAMMY"),
+               "SAAN",
+               "QYBURNS",
+               "RAMSEY",
+               "ROZ",
+               "SLYNT",
+                rebus::or("THE HOUND","HOUND"),
+               "LORD KARSTARK",
+               "YOUNG LYANNA",
+               "LADYC RANE",
+               "LORD MORMONT",
+               "COUNTRYSIDEBRONN",
+               "S ARYASANSA STARK",
+               "S ROOMAEMON",
+               rebus::or("GRAND PYCELLE", "GRAND PYRCELLE")
+               ,"LORD BOLTON",
+               "MARWYN"
+               )
+
+replacement. <- c("ALLISER THORNE",
+                  "PETYR BAELISH",
+                  "BLACK WALDER RIVERS",
+                  toupper("Brynden Tully"),
+                  "BRAN",
+                  "BRIENNE OF TARTH",
+                  "RODRIK CASSEL",
+                  "DAENERYS",
+                  toupper("Daario Naharis"),
+                  "EDDISON TOLLETT",
+                  "EDDARD STARK",
+                  "ELLARIA SAND",
+                  "THREE-EYED RAVEN",
+                  "GREY WORM",
+                  "PYCELLE",
+                  "MELISANDRE",
+                  "MHAEGEN",
+                  "MOSSADOR",
+                  "GREGOR CLEGANE",
+                  "OLENNA",
+                  "OTHELL YARWYCK",
+                  "SAMWELL TARLY",
+                  "SALLADHOR SAAN",
+                  "QYBURN",
+                  "RAMSAY",
+                  "ROS",
+                  "JANOS SLYNT",
+                  "SANDOR CLEGANE",
+                  "RICKARD KARSTARK",
+                  "LYANNA STARK",
+                  "LADY CRANE",
+                  "JEOR MORMONT",
+                  "BRONN",
+                  "SANSA STARK",
+                  "AEMON",
+                  "PYCELLE"
+                 , "ROOSE BOLTON",
+                 "EBROSE"
+                  )
+
+replacements <- data_frame(original = original., replacement = replacement.)
+
+rm(original., replacement.)
+
+```
+
+Check that all original. words are in original transcripts.
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+for(i in 1:nrow(replacements)){
+  
+  replacements$original[i] %>% print()
+  
+  str_detect(characters.transcripts.df$characters.transcripts.original, replacements$original[i]) %>%
+    sum() %>% print()
+  
+}
+
+rm(i)
+
+```
+
+
+Replace characters from manual replacement patterns
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+replacements$match <- NA
+
+for (i in 1:nrow(replacements)){
+  
+  pattern. <- replacements$original[i]
+  
+  replacements$match[i] <- characters.transcripts.df$characters.transcripts.cleaned %>%
+    str_subset(pattern = rebus::exactly(pattern.)) %>%
+    str_c(collapse = "/")
+  
+}
+
+max.number.matches <- replacements$match %>%
+  str_count("/") %>% max()+1
+
+into.vars. <- str_c(LETTERS[1:max.number.matches], "_replaced")
+
+```
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+replacements %<>%
+  separate(col = match, 
+           into = into.vars.,
+           sep = "/")
+
+rm(pattern., max.number.matches, into.vars., i, prefix.patterns)
+
+```
+
+Chunck to visualise all manual replacements
+```{r eval=FALSE, warning=FALSE, message=FALSE}
+
+replacements
+
+```
+
+Replace manually 
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+replacements %<>%
+  select(-original) %>%
+  gather(key = "key", value = "replaced", -replacement) %>%
+  select(replaced, replacement) %>%
+  filter(!is.na(replaced)) %>%
+  unique %>%
+  arrange(replaced)
+
+```
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+characters.transcripts.df %<>%
+  left_join(replacements, by = c("characters.transcripts.cleaned" = "replaced")) %>%
+  mutate(characters.transcripts.cleaned = if_else(!is.na(replacement),
+                                                  true = replacement,
+                                                  false = characters.transcripts.cleaned)) %>%
+  select(-replacement)
+
+```
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+rm(replacements, i, not.to.delete)
+
+```
+
+
+```{r eval=FALSE, warning=FALSE, message=FALSE}
+
+characters.transcripts.df
+  
+```
+
+
+# Match characters in transcripts to all names scrapped from wikipedia in previous scripts
+
+## Create numeric identifiers for character names which appeared in previous scripts
+
+Create a data frame with wikipedia/all character names with an identifier
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+characters.all.map.df <- data_frame(character.names.wikipedia = characters.all %>% 
+                                      toupper() %>% 
+                                      sort(),
+           identifier = 1:length(characters.all))
+
+characters.all.map.df %>%
+  write_csv("interim_output/characters_all_map.csv")
+
+rm(characters.all)
+
+```
+
+## Try to match exact 
+
+Percentage of cases from wikipedia matching those in transcripts
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+(characters.all.map.df$character.names.wikipedia %in% characters.transcripts.df$characters.transcripts.cleaned) %>% sum()/nrow(characters.all.map.df)
+
+```
+
+Percentage of cases from transcripts matching those in wikipedia
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+(unique(characters.transcripts.df$characters.transcripts.cleaned) %in% characters.all.map.df$character.names.wikipedia) %>% sum()/length(unique(characters.transcripts.df$characters.transcripts.cleaned))
+  
+```
+
+
+Matched cases (head)
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+characters.all.map.df %>% 
+  filter(character.names.wikipedia %in% characters.transcripts.df$characters.transcripts.cleaned) %$%
+  character.names.wikipedia %>% head()
+
+```
+
+Unmatched cases (head)
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+characters.all.map.df %>% 
+  filter(!character.names.wikipedia %in% characters.transcripts.df$characters.transcripts.cleaned) %$%
+  character.names.wikipedia %>% head()
+
+```
+
+
+## Suggest matches by first name
+
+For unmatched characters, try matching by first name. These matches should be checked manually. This is because some first names apply to multiple characters 
+(e.g. Kahl Brozho, Kahl Frozho)
+
+In transcripts, many characters appear only with their first name (i.e. last name is excluded). We need to compute the first name of all characters and match the names in transcripts with either first name or full name
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+characters.all.firstname <- characters.all.map.df$character.names.wikipedia %>%
+  str_match(pattern = capture("[[:upper:]]+") %R% optional(" " %R% "\\w+") %R% " [[:upper:]].+") %>% .[,2]
+
+characters.all.map.df %<>%
+  bind_cols(characters.all.firstname = characters.all.firstname)
+
+```
+
+
+Eliminate repeated first names. It would be dangerous to match them.
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+repeated.first.names <- characters.all.map.df %>%
+  count(characters.all.firstname) %>%
+  filter(n > 1, !is.na(characters.all.firstname)) %>%
+  arrange(desc(n))
+
+repeated.first.names
+
+```
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+characters.all.map.df %<>%
+  mutate(characters.all.firstname = if_else(!characters.all.firstname %in% repeated.first.names$characters.all.firstname,
+                                            true = characters.all.firstname,
+                                            false = NA_character_ ) )
+
+```
+
+Try to match with full name OR only first name
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+characters.all.map.df
+
+characters.transcripts.df %>% head
+
+```
+
+
+Overall, it's a great improvement. Manually check. Then export those that are not matched and do it manually.
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+characters.transcripts.df %<>%
+  left_join(characters.all.map.df %>% select(character.names.wikipedia, identifier), 
+            by = c("characters.transcripts.cleaned"="character.names.wikipedia") ) %>%
+  rename(identifier_fullname = identifier) %>%
+  left_join(characters.all.map.df %>% select(characters.all.firstname, identifier),
+            by = c("characters.transcripts.cleaned"="characters.all.firstname")) %>%
+  rename(identifier_firstname = identifier)
+
+characters.transcripts.df
+
+```
+
+
+TO DO: C
+Careful with 138 for 'Lord' pattern. I don't think it's the same as the LORD OF BONES.
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+characters.transcripts.df %<>%
+  mutate(identifier = if_else(!is.na(identifier_fullname), 
+                              true =  identifier_fullname,
+                              false = identifier_firstname
+         )) %>%
+  select(-identifier_fullname, -identifier_firstname)
+
+characters.transcripts.df %>%
+  arrange(identifier)
+
+```
+
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+characters.transcripts.df %$% identifier %>% is.na() %>% sum()
+
+```
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+characters.transcripts.df %>%
+  filter(is.na(identifier)) %>%
+  write_csv("interim_output/characters_manually_matchv2.csv")
+
+```
+
+## Check where unmatched/ambiguous characters appear
+```{r eval=FALSE, echo = FALSE, warning=FALSE, message=FALSE}
+
+episode.list.df$transcript %>%
+  map_lgl(function(x){str_detect(x, rebus::or("Arryn: ","ARRYN: ") )}) %>% 
+  unlist() %>% 
+  which()
+
+episode.list.df$transcript %>%
+  map_lgl(function(x){str_detect(x, rebus::or("Jon: ","JON: ") )}) %>% 
+  unlist() %>% 
+  which()
+
+```
+
+```{r eval=TRUE, echo = FALSE, warning=FALSE, message=FALSE}
+
+episode.list.df$transcript %>%
+  map_lgl(function(x){str_detect(x, rebus::or("KARSTARK: ","Karstark: ") )}) %>% 
+  unlist() %>% 
+  which()
+
+episode.list.df$transcript %>%
+  map_lgl(function(x){str_detect(x, rebus::or("KARSTARK: ","Karstark: ") )}) %>% 
+  unlist() %>% 
+  which() %>%
+  episode.list.df$link[.]
+
+
+```
+
+```{r eval=TRUE, echo = FALSE, warning=FALSE, message=FALSE}
+
+episode.list.df$transcript %>%
+  map_lgl(function(x){str_detect(x, rebus::or("LYANNA MORMONT: ","Lyanna Mormont: ") )}) %>% 
+  unlist() %>% 
+  which() 
+
+episode.list.df$transcript %>%
+  map_lgl(function(x){str_detect(x, rebus::or("LYANNA: ","Lyanna: ") )}) %>% 
+  unlist() %>% 
+  which() 
+
+```
+
+
+It looks like the mention to 'ROYCE' in the first episode refers to 'WAYMAR ROYCE' and those in episoded 38, 41, 54, 62 refer to 'YOHN ROYCE'. That's great! :D
+```{r eval=TRUE, echo = FALSE, warning=FALSE, message=FALSE}
+
+episode.list.df$transcript %>%
+  map_lgl(function(x){str_detect(x, rebus::or("ROYCE: ","Royce: ") )}) %>% 
+  unlist() %>% 
+  which() 
+
+episode.list.df$transcript %>%
+  map_lgl(function(x){str_detect(x, rebus::or("WAYMAR ROYCE: ","Waymar Royce: ") )}) %>% 
+  unlist() %>% 
+  which() 
+
+episode.list.df$transcript %>%
+  map_lgl(function(x){str_detect(x, rebus::or("ROBAR ROYCE: ","Robar Royce: ") )}) %>% 
+  unlist() %>% 
+  which() 
+
+episode.list.df$transcript %>%
+  map_lgl(function(x){str_detect(x, rebus::or("YOHN ROYCE: ","Yohn Royce: ") )}) %>% 
+  unlist() %>% 
+  which() 
+
+```
+
+
+
+## Import back the transcript characters which were manually matched
+This was the first round of matched characters. **Important: their identifier might not correspond to the current identifiers and should be excludedd**
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+characters.manually.matched <- tibble::tribble(
+                      ~characters.transcripts.original,                      ~characters.transcripts.cleaned, ~identifier,                                                                                           ~comment,        ~new_name, ~character.names.wikipedia,
+                                      "ADDAM MARBRAND",                                     "ADDAM MARBRAND",          NA,                                                                             "add as new character", "ADDAM MARBRAND",                         NA,
+                                              "AERSON",                                             "AERSON",          3L,                                                                                                 NA,               NA,            "AERON GREYJOY",
+                                      "ALLISER THRONE",                                     "ALLISER THRONE",          6L,                                                                                                 NA,               NA,           "ALLISER THORNE",
+                                            "ALLISTER",                                           "ALLISTER",          6L,                                                                                                 NA,               NA,           "ALLISER THORNE",
+                                             "BAELISH",                                            "BAELISH",        186L,                                                                                                 NA,               NA,            "PETYR BAELISH",
+                                           "BARRISTON",                                          "BARRISTON",         19L,                                                                                                 NA,               NA,          "BARRISTAN SELMY",
+                                        "BLACK WALDER",                                       "BLACK WALDER",         25L,                                                                                                 NA,               NA,      "BLACK WALDER RIVERS",
+                                           "BLACKFISH",                                          "BLACKFISH",         33L,                                                                                                 NA,               NA,            "BRYNDEN TULLY",
+                                          "BLACKSMITH",                                         "BLACKSMITH",         70L,                                                                                                 NA,               NA,                   "GENDRY",
+                                          "BLOODRIDER",                                         "BLOODRIDER",          NA,                                                                                           "delete",               NA,                         NA,
+                                               "BRAND",                                              "BRAND",         29L,                                                                                                 NA,               NA,               "BRAN STARK",
+                                         "BRANN STARK",                                        "BRANN STARK",         29L,                                                                                                 NA,               NA,               "BRAN STARK",
+                                              "CASSEL",                                             "CASSEL",        215L,                                                                                                 NA,               NA,            "RODRIK CASSEL",
+                                    "CERSEI BARATHEON",                                   "CERSEI BARATHEON",         38L,                                                                                                 NA,               NA,         "CERSEI LANNISTER",
+                                  "DAENARYS STORMBORN",                                 "DAENARYS STORMBORN",         45L,                                                                                                 NA,               NA,       "DAENERYS TARGARYEN",
+                                  "DAENERYS STORMBORN",                                 "DAENERYS STORMBORN",         45L,                                                                                                 NA,               NA,       "DAENERYS TARGARYEN",
+                                            "DAERNEYS",                                           "DAERNEYS",         45L,                                                                                                 NA,               NA,       "DAENERYS TARGARYEN",
+                                             "DANERYS",                                            "DANERYS",         45L,                                                                                                 NA,               NA,       "DAENERYS TARGARYEN",
+                                                "DANY",                                               "DANY",         45L,                                                                                                 NA,               NA,       "DAENERYS TARGARYEN",
+                                               "DARIO",                                              "DARIO",         44L,                                                                                                 NA,               NA,           "DAARIO NAHARIS",
+                                              "DARRIO",                                             "DARRIO",         44L,                                                                                                 NA,               NA,           "DAARIO NAHARIS",
+                                  "DEANERYS TARGARIAN",                                 "DEANERYS TARGARIAN",         45L,                                                                                                 NA,               NA,       "DAENERYS TARGARYEN",
+                                              "DERRYK",                                             "DERRYK",          NA,                                                                             "add as new character",          "Derek",                         NA,
+                                        "DOLOROUS EDD",                                       "DOLOROUS EDD",         61L,                                                                                                 NA,               NA,          "EDDISON TOLLETT",
+                                              "DONNEL",                                             "DONNEL",         54L,                                                                                                 NA,               NA,              "DONNEL HILL",
+                                                  "ED",                                                 "ED",         60L,                                                                                                 NA,               NA,             "EDDARD STARK",
+                                                 "EDD",                                                "EDD",         60L,                                                                                                 NA,               NA,             "EDDARD STARK",
+                                        "EDDARK STARK",                                       "EDDARK STARK",         60L,                                                                                                 NA,               NA,             "EDDARD STARK",
+                                              "ELARIA",                                             "ELARIA",         63L,                                                                                                 NA,               NA,             "ELLARIA SAND",
+                                               "ELLIA",                                              "ELLIA",         63L,                                                                                                 NA,               NA,             "ELLARIA SAND",
+                                       "GRAND PYCELLE",                                      "GRAND PYCELLE",        193L,                                                                                                 NA,               NA,                    "PYPAR",
+                                      "GRAND PYRCELLE",                                     "GRAND PYRCELLE",        193L,                                                                                                 NA,               NA,                    "PYPAR",
+                                            "GREYWORM",                                           "GREYWORM",         78L,                                                                                                 NA,               NA,                "GREY WORM",
+                                               "HOUND",                                              "HOUND",        224L,                                                                                                 NA,               NA,           "SANDOR CLEGANE",
+                                    "HUGH OF THE VALE",                                   "HUGH OF THE VALE",         94L,                                                                                                 NA,               NA,                     "HUGH",
+                                     "JAMIE LANNISTER",                                    "JAMIE LANNISTER",        102L,                                                                                                 NA,               NA,          "JAIME LANNISTER",
+                                       "JAREMY RYKKER",                                      "JAREMY RYKKER",          NA,                                                                             "add as new character",  "JAREMY RYKKER",                         NA,
+                                              "JHIQUI",                                             "JHIQUI",          NA,                                                                             "add as new character",         "JHIQUI",                         NA,
+                                                "JOHN",                                               "JOHN",          NA,                                                                                           "delete",               NA,                         NA,
+                                                 "JON",                                                "JON",        109L,                                                                                                 NA,               NA,                 "JON SNOW",
+                                       "JONOS BRACKEN",                                      "JONOS BRACKEN",          NA,                                                                             "add as new character",  "JONOS BRACKEN",                         NA,
+                                                "JORA",                                               "JORA",        110L,                                                                                                 NA,               NA,            "JORAH MORMONT",
+                                            "KARSTARK",                                           "KARSTARK",         82L,                                                                                                 NA,               NA,          "HARALD KARSTARK",
+                                        "KING JOFFREY",                                       "KING JOFFREY",        106L,                                                                                                 NA,               NA,        "JOFFREY BARATHEON",
+                                         "LEO LEFFORD",                                        "LEO LEFFORD",          NA,                                                                             "add as new character",    "LEO LEFFORD",                         NA,
+                                     "LHAZAREEN WOMAN",                                    "LHAZAREEN WOMAN",          NA,                                                                                           "delete",               NA,                         NA,
+                                         "LITTLE BIRD",                                        "LITTLE BIRD",          NA,                                                                                           "delete",               NA,                         NA,
+                                        "LITTLEFINGER",                                       "LITTLEFINGER",        186L,                                                                                                 NA,               NA,            "PETYR BAELISH",
+               "LITTLEFINGER ENTERS THE ROOMNED STARK",              "LITTLEFINGER ENTERS THE ROOMNED STARK",          NA,                                                                                           "delete",               NA,                         NA,
+                                              "LYANNA",                                             "LYANNA",        143L,                                                                                                 NA,               NA,           "LYANNA MORMONT",
+                                             "MAESTER",                                            "MAESTER",          NA,                                                                                           "delete",               NA,                         NA,
+                                            "MANDERLY",                                           "MANDERLY",        284L,                                                                                                 NA,               NA,           "WYMAN MANDERLY",
+                                         "MARYN TRANT",                                        "MARYN TRANT",        164L,                                                                                                 NA,               NA,              "MERYN TRANT",
+                                        "MASHA HEDDLE",                                       "MASHA HEDDLE",          NA,                                                                             "add as new character",   "MASHA HEDDLE",                         NA,
+                                         "MELISDANDRE",                                        "MELISDANDRE",        162L,                                                                                                 NA,               NA,               "MELISANDRE",
+                                             "MHAEGAN",                                            "MHAEGAN",        177L,                                                                                                 NA,               NA,                  "MHAEGEN",
+                                            "MILITANT",                                           "MILITANT",          NA,                                                                                           "delete",               NA,                         NA,
+  "MIRRI MAZ DUUR STARTS AN INCANTATIONMIRRI MAZ DUUR", "MIRRI MAZ DUUR STARTS AN INCANTATIONMIRRI MAZ DUUR",          NA,                                                                                           "delete",               NA,                         NA,
+                                                "MORD",                                               "MORD",          NA,                                                                             "add as new character",           "MORD",                         NA,
+                                             "MORDANE",                                            "MORDANE",        228L,                                                                                                 NA,               NA,            "SEPTA MORDANE",
+                                             "MOSADOR",                                            "MOSADOR",        167L,                                                                                                 NA,               NA,                 "MOSSADOR",
+                                            "MOUNTAIN",                                           "MOUNTAIN",         75L,                                                                                                 NA,               NA,           "GREGOR CLEGANE",
+                                                 "NAN",                                                "NAN",        177L,                                                                                                 NA,               NA,                  "OLD NAN",
+                                                 "NED",                                                "NED",          NA,                                                                                                 NA,               NA,             "EDDARD STARK",
+                                           "NED STARK",                                          "NED STARK",         60L,                                                                                                 NA,               NA,             "EDDARD STARK",
+                              "NIGHT WATCH STABLE BOY",                             "NIGHT WATCH STABLE BOY",          NA,                                                                                           "delete",               NA,                         NA,
+                                "NIGHTS WATCH BROTHER",                               "NIGHTS WATCH BROTHER",          NA,                                                                                           "delete",               NA,                         NA,
+                                             "OLEANNA",                                            "OLEANNA",        178L,                                                                                                 NA,               NA,            "OLENNA TYRELL",
+                                      "OTHELL YARWICK",                                     "OTHELL YARWICK",        184L,                                                                                                 NA,               NA,           "OTHELL YARWYCK",
+                                              "PYCELL",                                             "PYCELL",        192L,                                                                                                 NA,               NA,                  "PYCELLE",
+                                                 "PYP",                                                "PYP",        193L,                                                                                                 NA,               NA,                    "PYPAR",
+                                               "QUICK",                                              "QUICK",          NA,                                                                                           "delete",               NA,                         NA,
+                                             "QYBURNS",                                            "QYBURNS",        196L,                                                                                                 NA,               NA,                   "QYBURN",
+                                              "RAMSEY",                                             "RAMSEY",        199L,                                                                                                 NA,               NA,            "RAMSAY BOLTON",
+                                                "RANE",                                               "RANE",          NA,                                                                                           "delete",               NA,                         NA,
+                                             "RHAKARO",                                            "RHAKARO",        197L,                                                                                                 NA,               NA,                  "RAKHARO",
+                                            "RHAKHARO",                                           "RHAKHARO",        197L,                                                                                                 NA,               NA,                  "RAKHARO",
+                                             "RICKARD",                                            "RICKARD",        208L,                                                                                                 NA,               NA,            "RICKARD STARK",
+                                      "RODRICK CASSEL",                                     "RODRICK CASSEL",        215L,                                                                                                 NA,               NA,            "RODRIK CASSEL",
+                                       "RODRIK CASSAL",                                      "RODRIK CASSAL",        215L,                                                                                                 NA,               NA,            "RODRIK CASSEL",
+                                               "ROYCE",                                              "ROYCE",        289L,                                                                                                 NA,               NA,               "YOHN ROYCE",
+                                                 "ROZ",                                                "ROZ",        218L,                                                                                                 NA,               NA,                      "ROS",
+                                                "SAAN",                                               "SAAN",        220L,                                                                                                 NA,               NA,           "SALLADHOR SAAN",
+                                                 "SAM",                                                "SAM",        222L,                                                                                                 NA,               NA,            "SAMWELL TARLY",
+                                                "SAME",                                               "SAME",        222L,                                                                                                 NA,               NA,            "SAMWELL TARLY",
+                                               "SAMMY",                                              "SAMMY",        222L,                                                                                                 NA,               NA,            "SAMWELL TARLY",
+                                        "SAMWEL TARLY",                                       "SAMWEL TARLY",        222L,                                                                                                 NA,               NA,            "SAMWELL TARLY",
+                                              "SELYSE",                                             "SELYSE",        226L, "could be selyse baratheon or selyse florent. Selyse Baratheon was Selyse Florent before marriage",               NA,         "SELYSE BARATHEON",
+                                               "SEPTA",                                              "SEPTA",        229L,                                                                                                 NA,               NA,             "SEPTA UNELLA",
+                             "SEVERAL STARK BANNERMEN",                            "SEVERAL STARK BANNERMEN",          NA,                                                                                           "delete",               NA,                         NA,
+                                "SHADOW TOWER BROTHER",                               "SHADOW TOWER BROTHER",          NA,                                                                                           "delete",               NA,                         NA,
+                                            "SHOUTING",                                           "SHOUTING",          NA,                                                                                           "delete",               NA,                         NA,
+                                               "SLYNT",                                              "SLYNT",        103L,                                                                                                 NA,               NA,              "JANOS SLYNT",
+                                              "TALISA",                                             "TALISA",        244L,                                "could be talisa stark or talisa maegyr. They are the same person.",               NA,            "TALISA MAEGYR",
+                                           "THE HOUND",                                          "THE HOUND",        224L,                                                                                                 NA,               NA,           "SANDOR CLEGANE",
+                                              "TOMARD",                                             "TOMARD",          NA,                                                                             "add as new character",         "TOMARD",                         NA,
+                                               "TYWEN",                                              "TYWEN",        263L,                                                                                                 NA,               NA,          "TYWIN LANNISTER",
+                                         "VALE KNIGHT",                                        "VALE KNIGHT",          NA,                                                                                           "delete",               NA,                         NA,
+                                        "WALDERY FREY",                                       "WALDERY FREY",        273L,                                                                                                 NA,               NA,              "WALDER FREY",
+                                             "WUN WUN",                                            "WUN WUN",        282L,                                                                                                 NA,               NA,      "WUN WEG WUN DAR WUN",
+                                    "THRONEKHAL DROGO",                                   "THRONEKHAL DROGO",          NA,                                                                                                 NA,               NA,               "KHAL DROGO",
+                                          "LORD ROYCE",                                              "ROYCE",          NA,                                                                                                 NA,               NA,               "YOHN ROYCE",
+                                               "MERRY",                                              "MERRY",          NA,                                                                                                 NA,               NA,               "MERRY FREY"
+  ) %>%
+  select(-identifier)
+  
+```  
+
+
+Original table with characters.manually.matched 
+```{r eval=FALSE, warning=FALSE, message=FALSE}
+
+characters.manually.matched <- read_delim("interim_output/characters_manually_match_MOD.csv",
+                                        delim = ";") %>%
+  select(-identifier)
+
+```
+
+### New characters to add to the wikipedia list
+These are characters that appeared in the transcripts but not in the wikipedia list. We should add them to the list scrapped from wikipedia (i.e. characters.all). 
+
+From second revision:
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+more.added.characters <- data_frame(new_name = c("COHOLLO", "RYGER RIVERS", "STEVRON FREY", toupper("Merry Frey") ))
+
+```
+
+From imported csv (first revision):
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+next.current.identifier <- characters.all.map.df$identifier %>%
+  max()+1
+
+number.new.added <- characters.manually.matched %>%
+  filter(comment == "add as new character") %$%
+  new_name %>%
+  unique %>%
+  length() + nrow(more.added.characters)
+
+added.characters <- characters.manually.matched %>%
+  filter(comment == "add as new character") %>%
+  select(new_name) %>%
+  bind_rows(more.added.characters) %>%
+  unique %>%
+  mutate(character.names.wikipedia = toupper(new_name),
+         identifier = next.current.identifier:(next.current.identifier+number.new.added-1),
+         characters.all.firstname = NA_character_) %>%
+  select(-new_name)
+
+str_c("added characters: ", str_c(added.characters$character.names.wikipedia, collapse = ", ") )
+
+```
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+characters.all.map.df %<>%
+  bind_rows(added.characters)
+
+rm(next.current.identifier, number.new.added)
+
+```
+
+### Characters to delete from transcripts
+These were spot as characters from transcripts but are not. They should be deleted.
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+deleted.characters <- characters.manually.matched %>%
+  filter(comment == "delete") %>%
+  select(characters.transcripts.cleaned)
+
+print(str_c("before deletion: ", nrow(characters.transcripts.df), " rows"))
+
+characters.transcripts.df %<>%
+  anti_join(deleted.characters) 
+
+print(str_c("after deletion: ", nrow(characters.transcripts.df), " rows"))
+
+rm(deleted.characters)
+
+```
+
+
+### Character identifiers to update after manual check
+
+Need to add new names and identities for those that were added after the manual review. 
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+matched.characters <- characters.manually.matched %>%
+  mutate(character.names.wikipedia = if_else(comment == "add as new character" & !is.na(comment),
+                                                  true = toupper(new_name),
+                                                  false = character.names.wikipedia)) %>%
+  filter(is.na(comment) | comment != "delete") %>%
+  select(characters.transcripts.original, character.names.wikipedia)
+
+```
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+characters.transcripts.df %<>%
+  left_join(matched.characters, by = "characters.transcripts.original") 
+
+characters.transcripts.df %<>%
+  mutate(characters.transcripts.cleaned = if_else(!is.na(character.names.wikipedia),
+                                                  true = character.names.wikipedia,
+                                                  false = characters.transcripts.cleaned)) %>%
+  select(-character.names.wikipedia)
+  
+```
+  
+
+
+Allocate identifiers to those characters that were manually cleaned. Use identifiers from all character's list.
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+characters.transcripts.df %<>%
+  left_join(characters.all.map.df %>% select(character.names.wikipedia, identifier) %>% rename(identifier.wiki = identifier),
+            by = c("characters.transcripts.cleaned" = "character.names.wikipedia") ) %>%
+  mutate(identifier = if_else(is.na(identifier) & !is.na(identifier.wiki),
+                              true = identifier.wiki,
+                              false = identifier) ) %>%
+  select(-identifier.wiki)
+
+```
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+#characters.all.map.df %>% View()
+
+```
+
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+characters.transcripts.df %>%
+  filter(is.na(identifier))
+
+```
+
+
+We will probably not need first names of characters any more. Here we delete them
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+characters.all.map.df %<>% select(-characters.all.firstname)
+
+rm(characters.all.firstname)
+
+```
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+rm(imputed.identifiers, added.characters, matched.characters, 
+   repeated.first.names, characters.manually.matched, more.added.characters)
+
+```
+
+#Explore final wikipedia and transcript datasets
+```{r eval=FALSE, warning=FALSE, message=FALSE}
+
+View(characters.all.map.df)
+
+View(characters.transcripts.df)
+
+```
+
+**How many names do wikipedia characters have in transcripts?**
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+different.names.characters <- characters.all.map.df %>%
+  left_join(characters.transcripts.df %>%
+  count(identifier)) %>%
+  arrange(desc(n))
+
+max.different.names.characters <- different.names.characters$n %>% max(na.rm = T)
+
+different.names.characters
+
+rm(different.names.characters)
+
+```
+
+Some characters, such as 'DAENERYS TARGARYEN', 'PYCELLE' and 'RODRICK CASSEL' were especially problematic.
+
+
+
+#Check which characters appear in both datasets (transcripts and wikipedia)
+
+Test missing values in character datasets.
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+test1 <- is.na(characters.transcripts.df$characters.transcripts.cleaned) %>%
+  sum()
+
+test2 <- is.na(characters.all.map.df$character.names.wikipedia) %>%
+  sum()
+
+if(test1 > 0 | test2 > 0){
+  
+  stop("JER: Character names datasets have missing values. This should not be the case. Check code chunck 'Test missing values in character datasets'.")
+  
+}
+
+
+rm(test1, test2)
+
+```
+
+~100% of characters from transcripts were identified with characters in wikipedia.
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+sum(characters.transcripts.df$identifier %in% characters.all.map.df$identifier)/nrow(characters.transcripts.df)
+
+```
+
+~70% of characters in the scrapped wikipedia match a name in transcripts.
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+sum(characters.all.map.df$identifier %in% characters.transcripts.df$identifier )/nrow(characters.all.map.df)
+
+```
+
+**Unmatched names**
+Some characters are not humans and so can not participate in transcripts e.g. 'VISERION', 'SUMMER', 'SHAGGYDOG'. Others are babies e.g. 'BARRA'.  
+
+
+Some might be called something else (e.g. Borba = Prostitute)
+
+Others might only appear in missing episodes. Others might just appear but not talk. 
+
+TO DO: Ideally I would go throught this list and check character by character.
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+characters.all.map.df %>%
+  filter(!identifier %in% characters.transcripts.df$identifier)
+
+```
+
+# Merge both datasets
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+characters.all.map.df
+
+characters.transcripts.df
+
+
+```
+
+Aggregate characters in transcripts to create a 'wide' dataset.
+"_" seems a safe separator.
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+if(str_count(characters.transcripts.df$characters.transcripts.original, "_") %>% sum > 0){
+  
+  stop("The separator used to aggregate the dataset with characters from transcripts is not safe.s")
+  
+}
+
+characters.transcripts.df.gathered <- characters.transcripts.df %>%
+  select(characters.transcripts.original, identifier) %>%
+  group_by(identifier) %>%
+  mutate(characters.transcripts = str_c(characters.transcripts.original, collapse = "_")) %>%
+  select(-characters.transcripts.original) %>%
+  unique %>%
+  separate(col = characters.transcripts,
+           into = str_c("character_name_transcripts", 1:max.different.names.characters, sep = "_"),
+           sep = "_", remove = TRUE)
+
+characters.transcripts.df.gathered
+
+```
+
+Merge aggregated file with dataset with all characters 
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+characters.all.map.df %<>%
+  mutate(appears_in_transcripts = if_else(identifier %in% characters.transcripts.df.gathered$identifier, true = 1, false = 0) ) %>%
+  left_join(characters.transcripts.df.gathered, by = "identifier") 
+
+```
+
+
+
+
+# Check overlap with dead characters
+
+Check overlap with wikipedia characters. All dead characters are identified in our list of wikipedia characters.
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+characters.dead %<>%
+  mutate(character = if_else(character == "Grand Pycelle",
+                             true = "PYCELLE",
+                             false = character %>% toupper)  )
+
+characters.dead$character[!characters.dead$character %in% characters.all.map.df$character.names.wikipedia]
+
+```
+
+# Merge dataset with all characters (wikipedia) with deads
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+characters.all.map.df %<>%
+  mutate(died = if_else(character.names.wikipedia %in% characters.dead$character,
+                        true = 1,
+                        false = 0)) %>%
+  left_join(characters.dead %>% select(character, season, episode_number), 
+            by = c("character.names.wikipedia" = "character")) %>%
+  rename(season_death = season, episode_number_death = episode_number)
+
+```
+
+#Exploration of matched deaths by season (TO DO:MOVE TO FUTURE SCRIPTS)
+
+TO DO: THIS COULD GO IN FUTURE SCRIPTS
+
+How many of the dead characters are identified in transcripts?
+Around 62% appear in transcripts.
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+characters.all.map.df %>%
+  filter(died == 1) %>%
+  group_by(appears_in_transcripts) %>%
+  summarise(n. = n(),
+            prop = (n./nrow(characters.all.map.df %>% filter(died == 1))) %>% round(3) )
+
+```
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+characters.all.map.df %>%
+  filter(died == 1) %>%
+  group_by(season_death, appears_in_transcripts) %>%
+  summarise(n. = n()) %>%
+  mutate(prop.deaths.appear.transcripts = (n./sum(n.)) %>% round(3)) %>%
+  filter(appears_in_transcripts == 1)
+
+```
+
+Compare to number of missing episodes in each season
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+episode.list.df %>% 
+  mutate(missing_episode = if_else(link == "missing episode",
+                                   true = 1, false = 0)) %>%
+  group_by(season, missing_episode) %>%
+  summarise(n. = n()) %>%
+  mutate(prop = (n./sum(n.)) %>% round(2)) %>%
+  filter(missing_episode == 1)
+
+```
+
+
+# Export objects for exploration
+
+Export map with all characters
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+characters.all.map.df %>%
+  write_rds("interim_output/characters.all.map.06.RDS")
+
+```
+
+Export cleaned characters from transcripts
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+characters.transcripts.df %>%
+  write_rds("interim_output/characters_matched_transcripts_clean_06.RDS")
+
+```
+
