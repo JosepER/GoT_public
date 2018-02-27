@@ -1,0 +1,564 @@
+---
+title: "07_Count character appearances in transcripts in each episode, season and total"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+rm(list = ls())
+
+library(stringr)
+library(rebus)
+library(magrittr)
+library(tidyverse)
+
+```
+
+
+TO DO: probably change all names of objects starting with 'character' or 'characters'. This first word is non-informative and makes the names too long.
+
+# Import data 
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+char.transcripts.count <- read_rds("interim_output/characters_matched_transcripts_count_by_episode.04.RDS")
+
+char.all.map.df  <- 
+  read_rds("interim_output/characters.all.map.06.RDS")
+
+episode.list.df <-  read_rds("interim_output/episode_list_transcripts_03.RDS")
+
+```
+
+#Compute appearances of transcript characters in each episode
+
+## Map all character identifiers to gathered characters in transcripts.
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+char.transcripts.map.identifier <- char.all.map.df %>%
+  filter(appears_in_transcripts == 1) %>%
+  select(-character.names.wikipedia, -appears_in_transcripts, -died,
+         -season_death, -episode_number_death) %>%
+  gather(key = "key", value = "character.name.transcripts", -identifier) %>%
+  select(-key) %>%
+  filter(!is.na(character.name.transcripts)) %>%
+  arrange(identifier)
+
+char.transcripts.map.identifier %<>% #I think this unique here is not necessary.
+  unique
+
+char.transcripts.map.identifier
+
+```
+
+
+Test: there shouldn't be any repeated names in unique names from transcripts maped to identifiers
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+repeated.names <- char.transcripts.map.identifier %>%
+  count(character.name.transcripts) %>%
+  arrange(desc(n)) %>%
+  filter(n >1)
+
+char.transcripts.map.identifier %>%
+  filter(character.name.transcripts %in% repeated.names$character.name.transcripts)
+
+if(repeated.names %>% nrow > 0){
+  
+  stop("Failed test: names in transcripts maped to identifiers should not have repeated rows. This means that one name in transcripts was matched to multiple identities")
+  
+}
+
+```
+
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+rm(repeated.names)
+
+```
+
+
+## Delete episodes without named characters
+
+There is a problem with episodes 22 and 23. No character names were included in these transcripts. It's better to impute an NA to the name counts of these two episodes.
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+char.transcripts.count[[22]] <- NA
+
+char.transcripts.count[[23]] <- NA
+
+char.transcripts.count[[31]] <- NA
+
+```
+
+
+Transform the tables in the list into a data_frame and rename columns.
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+char.transcripts.count %<>% 
+  map(function(x){ 
+  
+  if(is.table(x)){
+  
+  x %<>% as_data_frame
+  x %<>% purrr::set_names(nm =  c("character_names", "appearances_episode"))
+   return(x)
+  
+}else{ return(NA)}  
+  
+  }
+
+ )
+  
+```
+
+
+
+### Manual change of character counts
+
+References to 'Lord Karstark' in s06e02 and s06e03 should be computed to 'Harald Karstark' and not to 'Rickard Karstark'. All previous references to 'Lord Karstark' should remain as appearences of 'Rickard Karstark'. 
+
+The easiest solution is to directly replace 'Lord Karstark' for 'Harald Karstark' in those two episodes (elements 52 and 53 of the list).
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+    char.transcripts.count[[52]][["character_names"]][which(char.transcripts.count[[52]][["character_names"]] == "LORD KARSTARK")] <- "HARALD KARSTARK"  
+ 
+    char.transcripts.count[[53]][["character_names"]][which(char.transcripts.count[[53]][["character_names"]] == "LORD KARSTARK")] <- "HARALD KARSTARK"    
+
+       char.transcripts.count[[61]][["character_names"]][which(char.transcripts.count[[61]][["character_names"]] %in% c("WALDER", "WALDER FREY", "WALDERY FREY") )] <- "ARYA STARK" 
+       
+```
+
+
+### Added counts by name
+
+Preparation for next chunck where counts are added by name
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+total.number.episodes <- nrow(episode.list.df)
+
+char.counts.by.episode.ls <- list()
+
+matched.names.transcripts <- char.all.map.df %>% 
+  filter(appears_in_transcripts == 1) %$% 
+  character.names.wikipedia
+
+index.non.missing.episodes <- (episode.list.df$transcript != "missing episode") %>% 
+  which
+
+  #transcripts in episodes 22, 23, 31 do not contain names
+
+index.non.missing.episodes <- index.non.missing.episodes[-which(index.non.missing.episodes %in% c(22, 23, 31))]
+
+```
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+if(!"char.counts.by.episode.ls.RDS" %in% "interim_output/"){
+
+for(c in 1:nrow(char.transcripts.map.identifier)){
+
+    name. <- char.transcripts.map.identifier$character.name.transcripts[c]
+    
+    #loop over list
+    
+    vector.counts. <- rep(NA_integer_, total.number.episodes)
+    
+    for(l in 1:length(char.transcripts.count)){
+      
+    if(!l %in% index.non.missing.episodes) {
+      
+      next()
+      
+    }
+      
+      if(str_count(char.transcripts.count[[l]][["character_names"]], pattern = rebus::exactly(name.) ) %>% sum > 0){
+      
+     vector.counts.[l]  <- char.transcripts.count[[l]] %>%
+      filter(character_names == name.) %$%
+      appearances_episode
+      
+      }else{
+        
+        vector.counts.[l] <- 0
+        
+      }
+         
+    
+  } 
+    
+  char.counts.by.episode.ls[[name.]] <- vector.counts.
+    
+    
+}
+  char.counts.by.episode.ls %>%
+    write_rds("interim_output/char.counts.by.episode.ls.RDS")
+  
+}else{
+  
+ char.counts.by.episode.ls <- read_rds("interim_output/char.counts.by.episode.ls.RDS")
+  
+}
+
+```
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+char.counts.by.episode.df <- data_frame(character.name.transcripts = names(char.counts.by.episode.ls)) %>%
+  cbind(char.counts.by.episode.ls %>% 
+  unlist %>%
+  matrix(nrow = length(char.counts.by.episode.ls), ncol = total.number.episodes, byrow = T) %>%
+  as_data_frame)
+
+season. <- str_c("s", "0", str_extract(episode.list.df$season, pattern = "[[:digit:]]"))
+episode. <- str_c("e",str_c("0", episode.list.df$episode_number) %>%
+  str_sub(-2, -1) )
+
+season.episode <- str_c(season., episode.)
+                                             
+names(char.counts.by.episode.df)[2:ncol(char.counts.by.episode.df)] <- season.episode
+
+char.counts.by.episode.df %>% 
+  write_rds("interim_output/char.counts.by.episode.df.RDS")
+
+```
+
+Clean environment after loop
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+rm(c, index.non.missing.episodes, l, name., vector.counts., 
+   season., episode., season.episode, char.tran)
+
+```
+
+ 
+Test that all names in transcripts were counted
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+if(char.counts.by.episode.ls %>% length() != char.transcripts.map.identifier$character.name.transcripts %>% length()){
+  
+  stop("Failed test: Some characters from transcripts were not counted")
+  
+}
+
+```
+
+
+All names should have been mentioned at least once.
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+test.character.zero.observations <- (char.counts.by.episode.ls %>%
+  map(sum, na.rm = T) %>% 
+  unlist > 0) %>%
+  prod()
+
+
+if(test.character.zero.observations != 1){
+  
+  warning("Failed Test. All characters in transcripts should be mentioned at least once.")
+  
+}
+
+(!char.counts.by.episode.ls %>%
+  map(sum, na.rm = T) %>% 
+  unlist > 0  ) %>% which()
+
+rm(test.character.zero.observations,
+   matched.names.transcripts)
+
+```
+
+
+Match with all characters identifier
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+char.counts.by.episode.df <- char.transcripts.map.identifier %>%
+  right_join(char.counts.by.episode.df, 
+            by = c("character.name.transcripts"))
+
+```
+
+# Appearences counts
+
+Create files to export count objects
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+if(!"./counts" %in% list.dirs()){
+  
+  dir.create("counts")
+  
+}
+
+if(!"counts/transcripts" %in% list.dirs("counts")){
+  
+  dir.create("counts/transcripts")
+   
+}
+
+
+```
+
+
+## Count total number of appearences in each episode
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+total.appearences.by.episode <- char.counts.by.episode.df %>%
+  select(-identifier, -character.name.transcripts) %>%
+  map_dbl(sum)
+
+total.appearences.by.episode %>%
+  write_rds("counts/transcripts/total_appearences_by_episode_07.RDS")
+
+total.appearences.by.episode
+
+```
+
+
+
+## Count total appearences of official/wikipedia characters
+
+
+### Episode counts
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+char.wiki.counts.by.episode <- char.counts.by.episode.df %>%
+  select(-character.name.transcripts) %>%
+  group_by(identifier) %>%
+  summarise_all(.funs = sum)
+  
+char.wiki.counts.by.episode <- char.all.map.df %>% 
+  select(character.names.wikipedia, identifier) %>%
+  right_join(char.wiki.counts.by.episode , by = "identifier")
+
+char.wiki.counts.by.episode %>%
+  write_rds("counts/transcripts/counts_by_episode_07.RDS")
+
+char.wiki.counts.by.episode
+
+```
+
+
+#### Cumulative episode counts
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+char.wiki.estimated.cumulative.counts <- char.wiki.counts.by.episode %>%
+  gather(key = "episode", value = "appearances", -character.names.wikipedia, -identifier) %>%
+  arrange(identifier) %>%
+  group_by(character.names.wikipedia, identifier) %>%
+  mutate(cumulative = cumsum(if_else(!is.na(appearances), 
+                                     true = appearances,
+                                     false = 0))) %>%
+  select(-appearances) %>%
+  spread(key = episode, value = cumulative) %>%
+  arrange(identifier)
+
+char.wiki.estimated.cumulative.counts
+
+```
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+char.wiki.estimated.cumulative.counts %>%
+  write_rds("counts/transcripts/estimated_cumulative_counts_by_episode_07.RDS")
+
+```
+
+
+#### Cumulative episode realtive counts
+
+Cumulative counts of total appearences by episode
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+total.estimated.cumulative.counts.by.episode <- if_else(!is.na(total.appearences.by.episode),
+        true = total.appearences.by.episode,
+        false = 0) %>% cumsum
+
+total.estimated.cumulative.counts.by.episode %>%
+  write_rds("counts/transcripts/total_estimated_cumulative_counts_by_episode_07.RDS")
+
+```
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+estimated.cumulative.proportions <- char.wiki.estimated.cumulative.counts %>%
+  ungroup %>%
+  select(-character.names.wikipedia, -identifier) %>%
+  map2_df(total.estimated.cumulative.counts.by.episode, ~ (.x / .y) ) 
+
+estimated.cumulative.proportions <- bind_cols(char.wiki.estimated.cumulative.counts %>% 
+                                                 select(character.names.wikipedia, identifier), 
+                                               estimated.cumulative.proportions)
+
+estimated.cumulative.proportions
+
+```
+
+Test that sum of each column proportion equals 1 and export relative counts
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+test.episode.sum <- estimated.cumulative.proportions %>%
+  ungroup %>%
+  select(-character.names.wikipedia, -identifier) %>%
+  map_dbl(sum) %>% prod
+
+if(test.episode.sum != 1){
+  
+  stop("Failed test: sum of episode cumulative proportions must be equal to 1.")
+  
+}
+
+estimated.cumulative.proportions %>% 
+  write_rds("counts/transcripts/estimated_cumulative_proportions_by_episode_07.RDS")
+
+
+```
+
+
+### Season counts
+s02, s03, s04 and s07 contain missing episodes. Thus, counts for these season are estimates from non-missing episodes.
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+season.names <- names(char.wiki.counts.by.episode)[3:ncol(char.wiki.counts.by.episode)]
+
+season.names %<>%
+  str_sub(2,3)
+
+season.names.unique <- season.names %>% 
+  unique
+
+char.wiki.counts.by.season <- data_frame()
+
+
+for(i in season.names.unique){
+  
+char.wiki.counts.by.season <- char.wiki.counts.by.episode %>%
+    select(character.names.wikipedia, identifier, 
+           str_which(season.names, pattern = i) + 2) %>%
+    gather(key = "key", value = "value", -
+character.names.wikipedia, -identifier) %>%
+    group_by(character.names.wikipedia, identifier) %>%
+    summarise(appearences = sum(value, na.rm = T)) %>%
+    mutate(s = i) %>%
+    bind_rows(char.wiki.counts.by.season)
+  
+}
+
+char.wiki.counts.by.season %<>%
+  arrange(character.names.wikipedia, as.numeric(s)) %>%
+  mutate(s = str_c("s", s))
+
+char.wiki.counts.by.season %<>%
+  spread(key = s, value = appearences)
+
+char.wiki.counts.by.season %>%
+  write_rds("counts/transcripts/estimated_counts_by_season_07.RDS")
+
+char.wiki.counts.by.season
+
+rm(i)
+
+```
+
+Total counts per season
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+total.appearences.by.season <- char.wiki.counts.by.season %>%
+  ungroup %>%
+  select(-character.names.wikipedia, -identifier) %>%
+  map_dbl(sum)
+
+total.appearences.by.season
+
+```
+
+Relative counts per season
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+proportion.appearences.by.season <- char.wiki.counts.by.season %>%
+  ungroup %>%
+  select(-character.names.wikipedia, -identifier) %>%
+  map2_df(total.appearences.by.season, ~ (.x / .y) )
+
+
+proportion.appearences.by.season <- bind_cols(char.wiki.counts.by.season %>% select(character.names.wikipedia, identifier),
+                                              proportion.appearences.by.season)
+
+proportion.appearences.by.season
+
+```
+
+Test that the sum of all appearences equal 1 and export relative counts per season
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+test.season.sum <- proportion.appearences.by.season %>%
+  ungroup %>%
+  select(-character.names.wikipedia, -identifier) %>%
+  map_dbl(sum) %>%
+  prod
+
+if(test.season.sum != 1){
+  
+  stop("Failed test: sum of proportions in season appearences should equal 1.")
+  
+}
+
+proportion.appearences.by.season %>%
+  write_rds("counts/transcripts/estimated_proportions_by_season_07.RDS")
+
+rm(test.season.sum)
+
+```
+
+
+
+### Compute total appearences of official/wikipedia characters in total
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+nested.counts.by.episode <- char.wiki.counts.by.episode %>%
+  group_by(character.names.wikipedia, identifier) %>%
+  nest()
+
+total.appearences <- nested.counts.by.episode %>%
+  mutate(total_appearences = map(data, function(x){ sum(x, na.rm = T) }) ) %>%
+  select(-data) %>% 
+  unnest()
+
+total.appearences
+
+total.appearences %>%
+  write_rds("counts/transcripts/total_appearences_07.RDS")
+
+```
+
+
+
+Convert all RDS into csv
+
+```{r eval=TRUE, warning=FALSE, message=FALSE}
+
+if(!"counts/csv_files" %in% list.dirs("counts") ){
+  
+  dir.create("counts/csv_files")
+  
+}
+
+all.counts <- list.files("counts/transcripts") %>% str_subset(pattern = ".RDS")
+
+for (f in all.counts){
+  
+  read_rds( str_c("counts/transcripts/", f) ) %>% as_data_frame %>%
+    write_csv( path = str_c("counts/csv_files/", f %>% str_sub(start = 1, end = -4), "csv")   ) 
+  
+}
+
+```
+
+
+
+

@@ -1,0 +1,3049 @@
+season,character_cast,episode
+1,Eddard Stark,1
+1,Robert Baratheon,1
+1,Jaime Lannister,1
+1,Catelyn Stark,1
+1,Cersei Lannister,1
+1,Daenerys Targaryen,1
+1,Jorah Mormont,1
+1,Viserys Targaryen,1
+1,Jon Snow,1
+1,Sansa Stark,1
+1,Arya Stark,1
+1,Robb Stark,1
+1,Theon Greyjoy,1
+1,Bran Stark,1
+1,Joffrey Baratheon,1
+1,Sandor Clegane,1
+1,Tyrion Lannister,1
+1,Maester Luwin,1
+1,Jory Cassel,1
+1,Rodrik Cassel,1
+1,Benjen Stark,1
+1,Illyrio Mopatis,1
+1,Qotho,1
+1,Ros,1
+1,Septa Mordane,1
+1,Will,1
+1,Jon Arryn,1
+1,Waymar Royce,1
+1,Gared,1
+1,Rickon Stark,1
+1,Tommen Baratheon,1
+1,Myrcella Baratheon,1
+1,Hodor,1
+1,Pentoshi Servant,1
+1,Wight Wildling Girl,1
+1,Khal Drogo,1
+1,Winterfell Beekeeper,1
+1,Tommy,1
+1,Mikken,1
+1,King's Guard,1
+1,Eddard Stark,2
+1,Robert Baratheon,2
+1,Jaime Lannister,2
+1,Catelyn Stark,2
+1,Cersei Lannister,2
+1,Daenerys Targaryen,2
+1,Jorah Mormont,2
+1,Viserys Targaryen,2
+1,Jon Snow,2
+1,Sansa Stark,2
+1,Arya Stark,2
+1,Robb Stark,2
+1,Theon Greyjoy,2
+1,Bran Stark,2
+1,Joffrey Baratheon,2
+1,Sandor Clegane,2
+1,Tyrion Lannister,2
+1,Maester Luwin,2
+1,Jory Cassel,2
+1,Rodrik Cassel,2
+1,Benjen Stark,2
+1,Doreah,2
+1,Qotho,2
+1,Irri,2
+1,Jhiqui,2
+1,Ilyn Payne,2
+1,Mycah,2
+1,Rast,2
+1,Catspaw Assassin,2
+1,Lannister Guard,2
+1,Tommen Baratheon,2
+1,Myrcella Baratheon,2
+1,Khal Drogo,2
+1,Knight,2
+1,Baratheon Guard,2
+1,Mikken,2
+1,Northern Bannerman,2
+1,Eddard Stark,3
+1,Robert Baratheon,3
+1,Jaime Lannister,3
+1,Catelyn Stark,3
+1,Cersei Lannister,3
+1,Daenerys Targaryen,3
+1,Jorah Mormont,3
+1,Petyr Baelish,3
+1,Viserys Targaryen,3
+1,Jon Snow,3
+1,Sansa Stark,3
+1,Arya Stark,3
+1,Bran Stark,3
+1,Robb Stark,3
+1,Joffrey Baratheon,3
+1,Tyrion Lannister,3
+1,Lord Varys,3
+1,Jeor Mormont,3
+1,Alliser Thorne,3
+1,Jory Cassel,3
+1,Barristan Selmy,3
+1,Rodrik Cassel,3
+1,Benjen Stark,3
+1,Yoren,3
+1,Grand Maester Pycelle,3
+1,Renly Baratheon,3
+1,Maester Aemon,3
+1,Syrio Forel,3
+1,Old Nan,3
+1,Septa Mordane,3
+1,Royal Steward,3
+1,Grenn,3
+1,Pypar,3
+1,Rast,3
+1,Rakharo,3
+1,Irri,3
+1,Lancel Lannister,3
+1,Drunk Patron,3
+1,King's Landing Whore,3
+1,Khal Drogo,3
+1,Eddard Stark,4
+1,Robert Baratheon,4
+1,Jaime Lannister,4
+1,Catelyn Stark,4
+1,Cersei Lannister,4
+1,Daenerys Targaryen,4
+1,Jorah Mormont,4
+1,Petyr Baelish,4
+1,Viserys Targaryen,4
+1,Jon Snow,4
+1,Sansa Stark,4
+1,Arya Stark,4
+1,Robb Stark,4
+1,Theon Greyjoy,4
+1,Bran Stark,4
+1,Joffrey Baratheon,4
+1,Sandor Clegane,4
+1,Tyrion Lannister,4
+1,Maester Luwin,4
+1,Lord Varys,4
+1,Bronn,4
+1,Alliser Thorne,4
+1,Jory Cassel,4
+1,Rodrik Cassel,4
+1,Yoren,4
+1,Barristan Selmy,4
+1,Janos Slynt,4
+1,Grand Maester Pycelle,4
+1,Renly Baratheon,4
+1,Marillion,4
+1,Septa Mordane,4
+1,Old Nan,4
+1,Samwell Tarly,4
+1,Grenn,4
+1,Pypar,4
+1,Rast,4
+1,Gregor Clegane,4
+1,Irri,4
+1,Doreah,4
+1,Hodor,4
+1,Hugh of the Vale,4
+1,Gendry,4
+1,Tobho Mott,4
+1,Tommen Baratheon,4
+1,Myrcella Baratheon,4
+1,Kurleket,4
+1,Knight of House Frey,4
+1,Willis Wode,4
+1,Masha Heddle,4
+1,Khal Drogo,4
+1,Lancel Lannister,4
+1,Eddard Stark,5
+1,Robert Baratheon,5
+1,Jaime Lannister,5
+1,Catelyn Stark,5
+1,Cersei Lannister,5
+1,Petyr Baelish,5
+1,Sansa Stark,5
+1,Arya Stark,5
+1,Theon Greyjoy,5
+1,Bran Stark,5
+1,Joffrey Baratheon,5
+1,Sandor Clegane,5
+1,Tyrion Lannister,5
+1,Maester Luwin,5
+1,Lord Varys,5
+1,Jory Cassel,5
+1,Rodrik Cassel,5
+1,Bronn,5
+1,Yoren,5
+1,Barristan Selmy,5
+1,Lysa Arryn,5
+1,Grand Maester Pycelle,5
+1,Renly Baratheon,5
+1,Illyrio Mopatis,5
+1,Marillion,5
+1,Loras Tyrell,5
+1,Gregor Clegane,5
+1,Mord,5
+1,Septa Mordane,5
+1,Ros,5
+1,Hugh of the Vale,5
+1,Robin Arryn,5
+1,Vardis Egen,5
+1,Royal Steward,5
+1,Goldcloak,5
+1,Kurleket,5
+1,Lancel Lannister,5
+1,Mhaegen,5
+1,King's Landing Whore,5
+1,Tommen Baratheon,5
+1,Myrcella Baratheon,5
+1,Willis Wode,5
+1,Peasant,5
+1,Eddard Stark,6
+1,Robert Baratheon,6
+1,Catelyn Stark,6
+1,Cersei Lannister,6
+1,Daenerys Targaryen,6
+1,Jorah Mormont,6
+1,Petyr Baelish,6
+1,Viserys Targaryen,6
+1,Robb Stark,6
+1,Sansa Stark,6
+1,Arya Stark,6
+1,Theon Greyjoy,6
+1,Bran Stark,6
+1,Joffrey Baratheon,6
+1,Tyrion Lannister,6
+1,Bronn,6
+1,Rodrik Cassel,6
+1,Barristan Selmy,6
+1,Loras Tyrell,6
+1,Lysa Arryn,6
+1,Grand Maester Pycelle,6
+1,Renly Baratheon,6
+1,Marillion,6
+1,Syrio Forel,6
+1,Mord,6
+1,Septa Mordane,6
+1,Osha,6
+1,Robin Arryn,6
+1,Ros,6
+1,Irri,6
+1,Doreah,6
+1,Hodor,6
+1,Vardis Egen,6
+1,Rakharo,6
+1,Qotho,6
+1,Lancel Lannister,6
+1,Dothraki Crone,6
+1,Joss,6
+1,Stiv,6
+1,Knight of House Lynderly,6
+1,Eon Hunter,6
+1,Night's Watch Deserter,6
+1,Beric Dondarrion,6
+1,Khal Drogo,6
+1,Eddard Stark,7
+1,Robert Baratheon,7
+1,Jaime Lannister,7
+1,Cersei Lannister,7
+1,Daenerys Targaryen,7
+1,Jorah Mormont,7
+1,Petyr Baelish,7
+1,Jon Snow,7
+1,Theon Greyjoy,7
+1,Joffrey Baratheon,7
+1,Sandor Clegane,7
+1,Maester Luwin,7
+1,Lord Varys,7
+1,Jeor Mormont,7
+1,Alliser Thorne,7
+1,Tywin Lannister,7
+1,Barristan Selmy,7
+1,Samwell Tarly,7
+1,Maester Aemon,7
+1,Grand Maester Pycelle,7
+1,Renly Baratheon,7
+1,Janos Slynt,7
+1,Osha,7
+1,Ros,7
+1,Grenn,7
+1,Pypar,7
+1,Rast,7
+1,Irri,7
+1,Doreah,7
+1,Rakharo,7
+1,Qotho,7
+1,Royal Steward,7
+1,Wine Merchant,7
+1,Armeca,7
+1,Varly,7
+1,Othell Yarwyck,7
+1,Jaremy Rykker,7
+1,Night's Watch Officer,7
+1,Tomard,7
+1,Little Bird,7
+1,Khal Drogo,7
+1,Eddard Stark,8
+1,Catelyn Stark,8
+1,Cersei Lannister,8
+1,Daenerys Targaryen,8
+1,Jorah Mormont,8
+1,Petyr Baelish,8
+1,Jon Snow,8
+1,Robb Stark,8
+1,Sansa Stark,8
+1,Arya Stark,8
+1,Theon Greyjoy,8
+1,Bran Stark,8
+1,Joffrey Baratheon,8
+1,Sandor Clegane,8
+1,Tyrion Lannister,8
+1,Maester Luwin,8
+1,Lord Varys,8
+1,Bronn,8
+1,Jeor Mormont,8
+1,Alliser Thorne,8
+1,Rodrik Cassel,8
+1,Tywin Lannister,8
+1,Barristan Selmy,8
+1,Samwell Tarly,8
+1,Grand Maester Pycelle,8
+1,Syrio Forel,8
+1,Lysa Arryn,8
+1,Janos Slynt,8
+1,Osha,8
+1,Septa Mordane,8
+1,Greatjon Umber,8
+1,Grenn,8
+1,Pypar,8
+1,Rast,8
+1,Shagga,8
+1,Mirri Maz Duur,8
+1,Irri,8
+1,Doreah,8
+1,Hodor,8
+1,Rakharo,8
+1,Qotho,8
+1,Royal Steward,8
+1,Kevan Lannister,8
+1,Robin Arryn,8
+1,Rickon Stark,8
+1,Meryn Trant,8
+1,Lannister Messenger,8
+1,Vayon Poole,8
+1,Night's Watch Messenger,8
+1,Othell Yarwyck,8
+1,Lannister Scout,8
+1,Stark Guard,8
+1,Red Keep Stableboy,8
+1,Khal Drogo,8
+1,Lord Galbart Glover,8
+1,Mago,8
+1,Night's Watch Officer,8
+1,Timett,8
+1,Eddard Stark,9
+1,Catelyn Stark,9
+1,Jaime Lannister,9
+1,Cersei Lannister,9
+1,Daenerys Targaryen,9
+1,Jorah Mormont,9
+1,Petyr Baelish,9
+1,Jon Snow,9
+1,Robb Stark,9
+1,Sansa Stark,9
+1,Arya Stark,9
+1,Theon Greyjoy,9
+1,Joffrey Baratheon,9
+1,Sandor Clegane,9
+1,Tyrion Lannister,9
+1,Lord Varys,9
+1,Bronn,9
+1,Jeor Mormont,9
+1,Rodrik Cassel,9
+1,Tywin Lannister,9
+1,Yoren,9
+1,Samwell Tarly,9
+1,Grand Maester Pycelle,9
+1,Maester Aemon,9
+1,Shae,9
+1,Walder Frey,9
+1,Greatjon Umber,9
+1,Ilyn Payne,9
+1,Grenn,9
+1,Pypar,9
+1,Rast,9
+1,Shagga,9
+1,Mirri Maz Duur,9
+1,Irri,9
+1,Doreah,9
+1,Rakharo,9
+1,Qotho,9
+1,Kevan Lannister,9
+1,King's Landing Baker,9
+1,Night's Watchman,9
+1,Stevron Frey,9
+1,Ryger Rivers,9
+1,King's Landing Urchin,9
+1,Khal Drogo,9
+1,Janos Slynt,9
+1,Joyeuse Frey,9
+1,Leo Lefford,9
+1,Timett,9
+1,Eddard Stark,10
+1,Catelyn Stark,10
+1,Jaime Lannister,10
+1,Cersei Lannister,10
+1,Daenerys Targaryen,10
+1,Jorah Mormont,10
+1,Petyr Baelish,10
+1,Jon Snow,10
+1,Robb Stark,10
+1,Sansa Stark,10
+1,Arya Stark,10
+1,Theon Greyjoy,10
+1,Bran Stark,10
+1,Joffrey Baratheon,10
+1,Sandor Clegane,10
+1,Tyrion Lannister,10
+1,Maester Luwin,10
+1,Lord Varys,10
+1,Bronn,10
+1,Jeor Mormont,10
+1,Rodrik Cassel,10
+1,Tywin Lannister,10
+1,Yoren,10
+1,Samwell Tarly,10
+1,Grand Maester Pycelle,10
+1,Marillion,10
+1,Shae,10
+1,Osha,10
+1,Ros,10
+1,Greatjon Umber,10
+1,Ilyn Payne,10
+1,Grenn,10
+1,Pypar,10
+1,Mirri Maz Duur,10
+1,Irri,10
+1,Rakharo,10
+1,Kevan Lannister,10
+1,Hodor,10
+1,Lancel Lannister,10
+1,Gendry,10
+1,Hot Pie,10
+1,Lommy Greenhands,10
+1,Rickon Stark,10
+1,Meryn Trant,10
+1,Rickard Karstark,10
+1,Jonos Bracken,10
+1,Leo Lefford,10
+1,Addam Marbrand,10
+1,Stark Guard,10
+1,Khal Drogo,10
+1,Lord Galbart Glover,10
+1,Lannister Guard,10
+2,Tyrion Lannister,1
+2,Cersei Lannister,1
+2,Jaime Lannister,1
+2,Catelyn Stark,1
+2,Daenerys Targaryen,1
+2,Petyr Baelish,1
+2,Jorah Mormont,1
+2,Jon Snow,1
+2,Davos Seaworth,1
+2,Bran Stark,1
+2,Robb Stark,1
+2,Sansa Stark,1
+2,Arya Stark,1
+2,Theon Greyjoy,1
+2,Samwell Tarly,1
+2,Joffrey Baratheon,1
+2,Sandor Clegane,1
+2,Stannis Baratheon,1
+2,Melisandre,1
+2,Jeor Mormont,1
+2,Bronn,1
+2,Lord Varys,1
+2,Shae,1
+2,Maester Luwin,1
+2,Rodrik Cassel,1
+2,Grand Maester Pycelle,1
+2,Craster,1
+2,Osha,1
+2,Maester Cressen,1
+2,Grenn,1
+2,Eddison Tollett,1
+2,Gendry,1
+2,Hot Pie,1
+2,Lommy Greenhands,1
+2,Doreah,1
+2,Irri,1
+2,Rakharo,1
+2,Kovarro,1
+2,Hodor,1
+2,Ros,1
+2,Janos Slynt,1
+2,Matthos Seaworth,1
+2,Dontos Hollard,1
+2,Gilly,1
+2,Alton Lannister,1
+2,Meryn Trant,1
+2,Northern Lord,1
+2,Armeca,1
+2,Daisy,1
+2,Mhaegen,1
+2,Myrcella Baratheon,1
+2,Tommen Baratheon,1
+2,Tobho Mott,1
+2,Chella,1
+2,Lord Portan,1
+2,Tourney Herald,1
+2,Marei,1
+2,Male Prostitute,1
+2,Young Nobleman,1
+2,Selyse Baratheon,1
+2,Night's Watch Officer,1
+2,Field Worker,1
+2,Craster's Daughter,1
+2,Timett,1
+2,Tyrion Lannister,2
+2,Cersei Lannister,2
+2,Daenerys Targaryen,2
+2,Petyr Baelish,2
+2,Jorah Mormont,2
+2,Jon Snow,2
+2,Davos Seaworth,2
+2,Theon Greyjoy,2
+2,Arya Stark,2
+2,Stannis Baratheon,2
+2,Melisandre,2
+2,Bronn,2
+2,Lord Varys,2
+2,Samwell Tarly,2
+2,Shae,2
+2,Grand Maester Pycelle,2
+2,Craster,2
+2,Balon Greyjoy,2
+2,Yoren,2
+2,Janos Slynt,2
+2,Jaqen H'ghar,2
+2,Gendry,2
+2,Grenn,2
+2,Eddison Tollett,2
+2,Doreah,2
+2,Irri,2
+2,Kovarro,2
+2,Hot Pie,2
+2,Lommy Greenhands,2
+2,Ros,2
+2,Rorge,2
+2,Yara Greyjoy,2
+2,Matthos Seaworth,2
+2,Salladhor Saan,2
+2,Gilly,2
+2,Alton Lannister,2
+2,Captain's Daughter,2
+2,Armeca,2
+2,Lordsport Dockhand,2
+2,Biter,2
+2,Podrick Payne,2
+2,White Walker,2
+2,Goldcloak,2
+2,Brothel Customer,2
+2,Marei,2
+2,Male Prostitute,2
+2,Tyrion Lannister,3
+2,Cersei Lannister,3
+2,Catelyn Stark,3
+2,Petyr Baelish,3
+2,Jon Snow,3
+2,Theon Greyjoy,3
+2,Bran Stark,3
+2,Sansa Stark,3
+2,Arya Stark,3
+2,Samwell Tarly,3
+2,Margaery Tyrell,3
+2,Jeor Mormont,3
+2,Bronn,3
+2,Lord Varys,3
+2,Shae,3
+2,Maester Luwin,3
+2,Rodrik Cassel,3
+2,Grand Maester Pycelle,3
+2,Craster,3
+2,Balon Greyjoy,3
+2,Yoren,3
+2,Renly Baratheon,3
+2,Gendry,3
+2,Jaqen H'ghar,3
+2,Brienne of Tarth,3
+2,Loras Tyrell,3
+2,Hot Pie,3
+2,Lommy Greenhands,3
+2,Yara Greyjoy,3
+2,Hodor,3
+2,Gilly,3
+2,Amory Lorch,3
+2,Polliver,3
+2,Rorge,3
+2,Biter,3
+2,Drowned Priest,3
+2,Myrcella Baratheon,3
+2,Tommen Baratheon,3
+2,Daisy,3
+2,Timett,3
+2,Gerald,3
+2,Colen of Greenpools,3
+2,Goldcloak,3
+2,Tyrell Soldier,3
+2,Night's Watch Officer,3
+2,Tyrion Lannister,4
+2,Catelyn Stark,4
+2,Daenerys Targaryen,4
+2,Petyr Baelish,4
+2,Jorah Mormont,4
+2,Tywin Lannister,4
+2,Davos Seaworth,4
+2,Joffrey Baratheon,4
+2,Robb Stark,4
+2,Sansa Stark,4
+2,Arya Stark,4
+2,Stannis Baratheon,4
+2,Melisandre,4
+2,Margaery Tyrell,4
+2,Bronn,4
+2,Sandor Clegane,4
+2,Renly Baratheon,4
+2,Spice King,4
+2,Xaro Xhoan Daxos,4
+2,Roose Bolton,4
+2,Gendry,4
+2,Lancel Lannister,4
+2,Talisa Maegyr,4
+2,Brienne of Tarth,4
+2,Pyat Pree,4
+2,Doreah,4
+2,Irri,4
+2,Kovarro,4
+2,Hot Pie,4
+2,Loras Tyrell,4
+2,Ros,4
+2,Gregor Clegane,4
+2,Meryn Trant,4
+2,Dontos Hollard,4
+2,The Tickler,4
+2,Lannister Guard,4
+2,Rennick,4
+2,Polliver,4
+2,Daisy,4
+2,Old Woman Prisoner,4
+2,Amory Lorch,4
+2,Wounded Lannister,4
+2,Tortured Prisoner,4
+2,Silk King,4
+2,Field Worker,4
+2,Tyrion Lannister,5
+2,Cersei Lannister,5
+2,Catelyn Stark,5
+2,Daenerys Targaryen,5
+2,Petyr Baelish,5
+2,Jorah Mormont,5
+2,Jon Snow,5
+2,Tywin Lannister,5
+2,Davos Seaworth,5
+2,Theon Greyjoy,5
+2,Samwell Tarly,5
+2,Bran Stark,5
+2,Arya Stark,5
+2,Stannis Baratheon,5
+2,Margaery Tyrell,5
+2,Jeor Mormont,5
+2,Bronn,5
+2,Maester Luwin,5
+2,Hallyne,5
+2,Rodrik Cassel,5
+2,Brienne of Tarth,5
+2,Osha,5
+2,Renly Baratheon,5
+2,Pyat Pree,5
+2,Jaqen H'ghar,5
+2,Gendry,5
+2,Lancel Lannister,5
+2,Qhorin Halfhand,5
+2,Grenn,5
+2,Loras Tyrell,5
+2,Eddison Tollett,5
+2,Doreah,5
+2,Irri,5
+2,Kovarro,5
+2,Xaro Xhoan Daxos,5
+2,Yara Greyjoy,5
+2,Hodor,5
+2,Hot Pie,5
+2,Dagmer Cleftjaw,5
+2,Black Lorren,5
+2,Amory Lorch,5
+2,Protestor,5
+2,Quaithe,5
+2,Reginald Lannister,5
+2,Rickon Stark,5
+2,Myrcella Baratheon,5
+2,The Tickler,5
+2,Winterfell Shepherd,5
+2,Qartheen Woman,5
+2,Silk King,5
+2,Tyrion Lannister,6
+2,Cersei Lannister,6
+2,Catelyn Stark,6
+2,Daenerys Targaryen,6
+2,Petyr Baelish,6
+2,Jon Snow,6
+2,Tywin Lannister,6
+2,Bran Stark,6
+2,Robb Stark,6
+2,Sansa Stark,6
+2,Arya Stark,6
+2,Theon Greyjoy,6
+2,Joffrey Baratheon,6
+2,Shae,6
+2,Sandor Clegane,6
+2,Maester Luwin,6
+2,Rodrik Cassel,6
+2,Osha,6
+2,Roose Bolton,6
+2,Xaro Xhoan Daxos,6
+2,Spice King,6
+2,Jaqen H'ghar,6
+2,Ygritte,6
+2,Brienne of Tarth,6
+2,Talisa Maegyr,6
+2,Qhorin Halfhand,6
+2,Dagmer Cleftjaw,6
+2,Meryn Trant,6
+2,Amory Lorch,6
+2,Black Lorren,6
+2,Irri,6
+2,Hodor,6
+2,Kovarro,6
+2,High Septon,6
+2,Farlen,6
+2,Drennan,6
+2,Myrcella Baratheon,6
+2,Rickon Stark,6
+2,Tommen Baratheon,6
+2,Lannister Captain,6
+2,Jacks,6
+2,Quent,6
+2,Tyrion Lannister,7
+2,Cersei Lannister,7
+2,Jaime Lannister,7
+2,Catelyn Stark,7
+2,Daenerys Targaryen,7
+2,Jorah Mormont,7
+2,Jon Snow,7
+2,Tywin Lannister,7
+2,Bran Stark,7
+2,Robb Stark,7
+2,Sansa Stark,7
+2,Arya Stark,7
+2,Theon Greyjoy,7
+2,Shae,7
+2,Sandor Clegane,7
+2,Maester Luwin,7
+2,Pyat Pree,7
+2,Spice King,7
+2,Xaro Xhoan Daxos,7
+2,Osha,7
+2,Roose Bolton,7
+2,Ygritte,7
+2,Brienne of Tarth,7
+2,Talisa Maegyr,7
+2,Dagmer Cleftjaw,7
+2,Quaithe,7
+2,Rickard Karstark,7
+2,Alton Lannister,7
+2,Black Lorren,7
+2,Hodor,7
+2,Kovarro,7
+2,Gregor Clegane,7
+2,Rickon Stark,7
+2,Winterfell Shepherd,7
+2,Bernadette,7
+2,Theon's Master of Hounds,7
+2,Silk King,7
+2,Torrhen Karstark,7
+2,Farlen,7
+2,Drennan,7
+2,Jacks,7
+2,Stark Guard,7
+2,Quent,7
+2,Stark Guard,7
+2,Tyrion Lannister,8
+2,Cersei Lannister,8
+2,Jaime Lannister,8
+2,Catelyn Stark,8
+2,Daenerys Targaryen,8
+2,Jorah Mormont,8
+2,Jon Snow,8
+2,Tywin Lannister,8
+2,Davos Seaworth,8
+2,Joffrey Baratheon,8
+2,Bran Stark,8
+2,Robb Stark,8
+2,Arya Stark,8
+2,Theon Greyjoy,8
+2,Samwell Tarly,8
+2,Stannis Baratheon,8
+2,Shae,8
+2,Bronn,8
+2,Lord Varys,8
+2,Maester Luwin,8
+2,Osha,8
+2,Talisa Maegyr,8
+2,Roose Bolton,8
+2,Jaqen H'ghar,8
+2,Ygritte,8
+2,Qhorin Halfhand,8
+2,Yara Greyjoy,8
+2,Gendry,8
+2,Brienne of Tarth,8
+2,Dagmer Cleftjaw,8
+2,Kevan Lannister,8
+2,Rickard Karstark,8
+2,Grenn,8
+2,Eddison Tollett,8
+2,Hot Pie,8
+2,Ros,8
+2,Rorge,8
+2,Kovarro,8
+2,Rattleshirt,8
+2,Hodor,8
+2,Biter,8
+2,Rickon Stark,8
+2,Podrick Payne,8
+2,Gregor Clegane,8
+2,Matthos Seaworth,8
+2,Stark Messenger,8
+2,Lannister Torturer,8
+2,Stark Guard,8
+2,Lannister Captain,8
+2,Lannister Soldier,8
+2,Tyrion Lannister,9
+2,Cersei Lannister,9
+2,Tywin Lannister,9
+2,Davos Seaworth,9
+2,Joffrey Baratheon,9
+2,Sansa Stark,9
+2,Sandor Clegane,9
+2,Stannis Baratheon,9
+2,Bronn,9
+2,Lord Varys,9
+2,Shae,9
+2,Hallyne,9
+2,Grand Maester Pycelle,9
+2,Lancel Lannister,9
+2,Matthos Seaworth,9
+2,Loras Tyrell,9
+2,Armeca,9
+2,Dontos Hollard,9
+2,Ilyn Payne,9
+2,Singing Lannister Soldier,9
+2,Tommen Baratheon,9
+2,Podrick Payne,9
+2,Imry Florent,9
+2,Mandon Moore,9
+2,Baratheon Officer,9
+2,Captain of the Archers,9
+2,Baratheon Archer,9
+2,Lannister Archer,9
+2,Market Trader,9
+2,Tyrion Lannister,10
+2,Cersei Lannister,10
+2,Jaime Lannister,10
+2,Catelyn Stark,10
+2,Daenerys Targaryen,10
+2,Petyr Baelish,10
+2,Jorah Mormont,10
+2,Jon Snow,10
+2,Tywin Lannister,10
+2,Bran Stark,10
+2,Robb Stark,10
+2,Sansa Stark,10
+2,Arya Stark,10
+2,Theon Greyjoy,10
+2,Samwell Tarly,10
+2,Joffrey Baratheon,10
+2,Margaery Tyrell,10
+2,Stannis Baratheon,10
+2,Melisandre,10
+2,Lord Varys,10
+2,Shae,10
+2,Maester Luwin,10
+2,Grand Maester Pycelle,10
+2,Pyat Pree,10
+2,Osha,10
+2,Jaqen H'ghar,10
+2,Qhorin Halfhand,10
+2,Brienne of Tarth,10
+2,Ygritte,10
+2,Xaro Xhoan Daxos,10
+2,Gendry,10
+2,Talisa Maegyr,10
+2,Ros,10
+2,Loras Tyrell,10
+2,Grenn,10
+2,Eddison Tollett,10
+2,Hot Pie,10
+2,Dagmer Cleftjaw,10
+2,Doreah,10
+2,Kovarro,10
+2,Hodor,10
+2,Rickon Stark,10
+2,Rattleshirt,10
+2,Black Lorren,10
+2,Podrick Payne,10
+2,Jaqen's Disguise,10
+2,Stark Soldier,10
+2,Soldier Tom,10
+2,Septon,10
+2,White Walker,10
+2,Rhaego,10
+2,Khal Drogo,10
+2,Wight,10
+3,Tyrion Lannister,1
+3,Cersei Lannister,1
+3,Daenerys Targaryen,1
+3,Jon Snow,1
+3,Robb Stark,1
+3,Jorah Mormont,1
+3,Catelyn Stark,1
+3,Petyr Baelish,1
+3,Tywin Lannister,1
+3,Davos Seaworth,1
+3,Stannis Baratheon,1
+3,Melisandre,1
+3,Margaery Tyrell,1
+3,Samwell Tarly,1
+3,Joffrey Baratheon,1
+3,Sansa Stark,1
+3,Talisa Stark,1
+3,Shae,1
+3,Ygritte,1
+3,Jeor Mormont,1
+3,Bronn,1
+3,Mance Rayder,1
+3,Roose Bolton,1
+3,Barristan Selmy,1
+3,Loras Tyrell,1
+3,Qyburn,1
+3,Tormund Giantsbane,1
+3,Ros,1
+3,Rickard Karstark,1
+3,Salladhor Saan,1
+3,Grenn,1
+3,Eddison Tollett,1
+3,Podrick Payne,1
+3,Kraznys mo Nakloz,1
+3,Missandei,1
+3,Rast,1
+3,Rattleshirt,1
+3,Meryn Trant,1
+3,Dongo the Giant,1
+3,Mirelle,1
+3,Boat Commander,1
+3,Margaery's Handmaiden,1
+3,Orphan Kid,1
+3,Warlock,1
+3,Unsullied,1
+3,Dothraki,1
+3,Tyrion Lannister,2
+3,Jaime Lannister,2
+3,Cersei Lannister,2
+3,Jon Snow,2
+3,Robb Stark,2
+3,Catelyn Stark,2
+3,Margaery Tyrell,2
+3,Bran Stark,2
+3,Joffrey Baratheon,2
+3,Sansa Stark,2
+3,Arya Stark,2
+3,Theon Greyjoy,2
+3,Talisa Stark,2
+3,Gendry,2
+3,Ygritte,2
+3,Samwell Tarly,2
+3,Jeor Mormont,2
+3,Shae,2
+3,Sandor Clegane,2
+3,Olenna Tyrell,2
+3,Mance Rayder,2
+3,Orell,2
+3,Thoros of Myr,2
+3,Brienne of Tarth,2
+3,Locke,2
+3,Osha,2
+3,Roose Bolton,2
+3,Ramsay Snow,2
+3,Tormund Giantsbane,2
+3,Loras Tyrell,2
+3,Jojen Reed,2
+3,Meera Reed,2
+3,Hot Pie,2
+3,Rickard Karstark,2
+3,Anguy,2
+3,Grenn,2
+3,Eddison Tollett,2
+3,Rast,2
+3,Hodor,2
+3,Rickon Stark,2
+3,Master Torturer,2
+3,Riverlands Traveller,2
+3,King's Landing Tailor,2
+3,Tyrell Servant,2
+3,Eddard Stark,2
+3,Brotherhood Member,2
+3,Tyrion Lannister,3
+3,Jaime Lannister,3
+3,Cersei Lannister,3
+3,Daenerys Targaryen,3
+3,Jon Snow,3
+3,Robb Stark,3
+3,Jorah Mormont,3
+3,Catelyn Stark,3
+3,Petyr Baelish,3
+3,Tywin Lannister,3
+3,Stannis Baratheon,3
+3,Melisandre,3
+3,Theon Greyjoy,3
+3,Samwell Tarly,3
+3,Arya Stark,3
+3,Talisa Stark,3
+3,Gendry,3
+3,Ygritte,3
+3,Jeor Mormont,3
+3,Lord Varys,3
+3,Bronn,3
+3,Sandor Clegane,3
+3,Mance Rayder,3
+3,Craster,3
+3,Barristan Selmy,3
+3,Brienne of Tarth,3
+3,Orell,3
+3,Thoros of Myr,3
+3,Brynden Tully,3
+3,Edmure Tully,3
+3,Tormund Giantsbane,3
+3,Grand Maester Pycelle,3
+3,Ramsay Snow,3
+3,Locke,3
+3,Grenn,3
+3,Eddison Tollett,3
+3,Rast,3
+3,Karl Tanner,3
+3,Gilly,3
+3,Hot Pie,3
+3,Ros,3
+3,Podrick Payne,3
+3,Anguy,3
+3,Kraznys mo Nakloz,3
+3,Missandei,3
+3,Master Torturer,3
+3,Greizhen mo Ullhor,3
+3,Bolton Soldier,3
+3,Craster's Wife,3
+3,Craster's Younger Wife,3
+3,Marei,3
+3,Genna,3
+3,Kayla,3
+3,Martyn Lannister,3
+3,Willem Lannister,3
+3,Tortured Slave,3
+3,Riverrun Nobleman,3
+3,Brotherhood Member,3
+3,Night's Watch Officer,3
+3,Hoster Tully,3
+3,Tyrion Lannister,4
+3,Jaime Lannister,4
+3,Cersei Lannister,4
+3,Daenerys Targaryen,4
+3,Jorah Mormont,4
+3,Catelyn Stark,4
+3,Tywin Lannister,4
+3,Margaery Tyrell,4
+3,Theon Greyjoy,4
+3,Bran Stark,4
+3,Sansa Stark,4
+3,Arya Stark,4
+3,Samwell Tarly,4
+3,Gendry,4
+3,Joffrey Baratheon,4
+3,Sandor Clegane,4
+3,Lord Varys,4
+3,Jeor Mormont,4
+3,Olenna Tyrell,4
+3,Craster,4
+3,Brienne of Tarth,4
+3,Barristan Selmy,4
+3,Thoros of Myr,4
+3,Beric Dondarrion,4
+3,Locke,4
+3,Ramsay Snow,4
+3,Gilly,4
+3,Jojen Reed,4
+3,Karl Tanner,4
+3,Grenn,4
+3,Eddison Tollett,4
+3,Rast,4
+3,Kraznys mo Nakloz,4
+3,Missandei,4
+3,Ros,4
+3,Anguy,4
+3,Greizhen mo Ullhor,4
+3,Tyrell Lady,4
+3,Bolton Soldier,4
+3,Sorcerer,4
+3,Brotherhood Member,4
+3,Night's Watch Officer,4
+3,Steelshanks Walton,4
+3,Tyrion Lannister,5
+3,Jaime Lannister,5
+3,Cersei Lannister,5
+3,Daenerys Targaryen,5
+3,Jon Snow,5
+3,Robb Stark,5
+3,Jorah Mormont,5
+3,Catelyn Stark,5
+3,Petyr Baelish,5
+3,Tywin Lannister,5
+3,Davos Seaworth,5
+3,Stannis Baratheon,5
+3,Margaery Tyrell,5
+3,Talisa Stark,5
+3,Sansa Stark,5
+3,Arya Stark,5
+3,Gendry,5
+3,Ygritte,5
+3,Sandor Clegane,5
+3,Olenna Tyrell,5
+3,Brienne of Tarth,5
+3,Barristan Selmy,5
+3,Roose Bolton,5
+3,Thoros of Myr,5
+3,Beric Dondarrion,5
+3,Orell,5
+3,Qyburn,5
+3,Brynden Tully,5
+3,Edmure Tully,5
+3,Tormund Giantsbane,5
+3,Locke,5
+3,Loras Tyrell,5
+3,Rickard Karstark,5
+3,Selyse Baratheon,5
+3,Shireen Baratheon,5
+3,Missandei,5
+3,Grey Worm,5
+3,Anguy,5
+3,Podrick Payne,5
+3,Olyvar,5
+3,Martyn Lannister,5
+3,Willem Lannister,5
+3,Karstark Lookout,5
+3,Brotherhood Member,5
+3,Steelshanks Walton,5
+3,Bathhouse Boy,5
+3,Tyrion Lannister,6
+3,Jaime Lannister,6
+3,Cersei Lannister,6
+3,Jon Snow,6
+3,Robb Stark,6
+3,Catelyn Stark,6
+3,Petyr Baelish,6
+3,Tywin Lannister,6
+3,Melisandre,6
+3,Theon Greyjoy,6
+3,Bran Stark,6
+3,Sansa Stark,6
+3,Arya Stark,6
+3,Samwell Tarly,6
+3,Gendry,6
+3,Joffrey Baratheon,6
+3,Ygritte,6
+3,Lord Varys,6
+3,Shae,6
+3,Olenna Tyrell,6
+3,Brienne of Tarth,6
+3,Roose Bolton,6
+3,Thoros of Myr,6
+3,Beric Dondarrion,6
+3,Orell,6
+3,Osha,6
+3,Brynden Tully,6
+3,Edmure Tully,6
+3,Tormund Giantsbane,6
+3,Ramsay Snow,6
+3,Gilly,6
+3,Loras Tyrell,6
+3,Jojen Reed,6
+3,Meera Reed,6
+3,Ros,6
+3,Anguy,6
+3,Hodor,6
+3,Lothar Frey,6
+3,Black Walder Rivers,6
+3,Bernadette,6
+3,Rickon Stark,6
+3,Brotherhood Member,6
+3,Steelshanks Walton,6
+3,Tyrion Lannister,7
+3,Jaime Lannister,7
+3,Daenerys Targaryen,7
+3,Jon Snow,7
+3,Robb Stark,7
+3,Jorah Mormont,7
+3,Catelyn Stark,7
+3,Tywin Lannister,7
+3,Margaery Tyrell,7
+3,Melisandre,7
+3,Bran Stark,7
+3,Sansa Stark,7
+3,Arya Stark,7
+3,Theon Greyjoy,7
+3,Talisa Stark,7
+3,Joffrey Baratheon,7
+3,Gendry,7
+3,Shae,7
+3,Ygritte,7
+3,Bronn,7
+3,Sandor Clegane,7
+3,Orell,7
+3,Brienne of Tarth,7
+3,Beric Dondarrion,7
+3,Thoros of Myr,7
+3,Locke,7
+3,Osha,7
+3,Qyburn,7
+3,Roose Bolton,7
+3,Brynden Tully,7
+3,Edmure Tully,7
+3,Barristan Selmy,7
+3,Ramsay Snow,7
+3,Tormund Giantsbane,7
+3,Jojen Reed,7
+3,Meera Reed,7
+3,Missandei,7
+3,Grey Worm,7
+3,Hodor,7
+3,Anguy,7
+3,Razdal mo Eraz,7
+3,Steelshanks Walton,7
+3,Myranda,7
+3,Violet,7
+3,Rickon Stark,7
+3,The Bear,7
+3,Bolton Guard,7
+3,Tyrion Lannister,8
+3,Cersei Lannister,8
+3,Daenerys Targaryen,8
+3,Jorah Mormont,8
+3,Tywin Lannister,8
+3,Davos Seaworth,8
+3,Stannis Baratheon,8
+3,Melisandre,8
+3,Margaery Tyrell,8
+3,Joffrey Baratheon,8
+3,Sansa Stark,8
+3,Arya Stark,8
+3,Samwell Tarly,8
+3,Gendry,8
+3,Shae,8
+3,Sandor Clegane,8
+3,Lord Varys,8
+3,Bronn,8
+3,Olenna Tyrell,8
+3,Grand Maester Pycelle,8
+3,Barristan Selmy,8
+3,Gilly,8
+3,Loras Tyrell,8
+3,Daario Naharis,8
+3,Grey Worm,8
+3,Missandei,8
+3,Mero,8
+3,Prendahl na Ghezn,8
+3,Podrick Payne,8
+3,Meryn Trant,8
+3,High Septon,8
+3,Yunkai'i Whore,8
+3,White Walker,8
+3,Steelshanks Walton,8
+3,Tyrell Lady,8
+3,Daenerys Targaryen,9
+3,Jon Snow,9
+3,Robb Stark,9
+3,Jorah Mormont,9
+3,Catelyn Stark,9
+3,Samwell Tarly,9
+3,Bran Stark,9
+3,Arya Stark,9
+3,Talisa Stark,9
+3,Ygritte,9
+3,Sandor Clegane,9
+3,Walder Frey,9
+3,Orell,9
+3,Roose Bolton,9
+3,Barristan Selmy,9
+3,Brynden Tully,9
+3,Edmure Tully,9
+3,Tormund Giantsbane,9
+3,Osha,9
+3,Jojen Reed,9
+3,Meera Reed,9
+3,Gilly,9
+3,Daario Naharis,9
+3,Grey Worm,9
+3,Missandei,9
+3,Hodor,9
+3,Lothar Frey,9
+3,Black Walder Rivers,9
+3,Septon,9
+3,Rickon Stark,9
+3,Roslin Frey,9
+3,Old Man,9
+3,Frey Guard,9
+3,Merry Frey,9
+3,Hog Farmer,9
+3,Joyeuse Frey,9
+3,Wendel Manderly,9
+3,Drummer,9
+3,Frey Guard,9
+3,Frey Guardsman,9
+3,Marianne Frey,9
+3,Frey Wedding Guest,9
+3,Musician,9
+3,Frey Wedding Guest,9
+3,Tyrion Lannister,10
+3,Jaime Lannister,10
+3,Cersei Lannister,10
+3,Daenerys Targaryen,10
+3,Jon Snow,10
+3,Jorah Mormont,10
+3,Tywin Lannister,10
+3,Davos Seaworth,10
+3,Stannis Baratheon,10
+3,Melisandre,10
+3,Bran Stark,10
+3,Sansa Stark,10
+3,Arya Stark,10
+3,Theon Greyjoy,10
+3,Joffrey Baratheon,10
+3,Ygritte,10
+3,Samwell Tarly,10
+3,Gendry,10
+3,Sandor Clegane,10
+3,Lord Varys,10
+3,Shae,10
+3,Walder Frey,10
+3,Balon Greyjoy,10
+3,Roose Bolton,10
+3,Maester Aemon,10
+3,Grand Maester Pycelle,10
+3,Brienne of Tarth,10
+3,Ramsay Snow,10
+3,Barristan Selmy,10
+3,Qyburn,10
+3,Gilly,10
+3,Jojen Reed,10
+3,Meera Reed,10
+3,Yara Greyjoy,10
+3,Podrick Payne,10
+3,Daario Naharis,10
+3,Hodor,10
+3,Missandei,10
+3,Grey Worm,10
+3,Pypar,10
+3,Shireen Baratheon,10
+3,Fruit Vendor,10
+3,Todder,10
+3,Desmond Crakehall,10
+3,Yunkai Citizen,10
+3,Stark Bannerman,10
+4,Tyrion Lannister,1
+4,Jaime Lannister,1
+4,Cersei Lannister,1
+4,Daenerys Targaryen,1
+4,Jon Snow,1
+4,Tywin Lannister,1
+4,Margaery Tyrell,1
+4,Joffrey Baratheon,1
+4,Sansa Stark,1
+4,Arya Stark,1
+4,Samwell Tarly,1
+4,Ygritte,1
+4,Tormund Giantsbane,1
+4,Sandor Clegane,1
+4,Brienne of Tarth,1
+4,Bronn,1
+4,Shae,1
+4,Jorah Mormont,1
+4,Olenna Tyrell,1
+4,Oberyn Martell,1
+4,Ellaria Sand,1
+4,Daario Naharis,1
+4,Barristan Selmy,1
+4,Maester Aemon,1
+4,Alliser Thorne,1
+4,Qyburn,1
+4,Styr,1
+4,Grey Worm,1
+4,Missandei,1
+4,Janos Slynt,1
+4,Podrick Payne,1
+4,Meryn Trant,1
+4,Dontos Hollard,1
+4,Olyvar,1
+4,Polliver,1
+4,Morgan,1
+4,Morgan's Friend,1
+4,Thenn Warg,1
+4,Innkeeper,1
+4,Lord Blackmont,1
+4,Othell Yarwyck,1
+4,Ser Endrew Tarth,1
+4,Bernadette,1
+4,Marei,1
+4,Tommy,1
+4,Innkeeper's Daughter,1
+4,Tyrion Lannister,2
+4,Jaime Lannister,2
+4,Cersei Lannister,2
+4,Tywin Lannister,2
+4,Margaery Tyrell,2
+4,Davos Seaworth,2
+4,Stannis Baratheon,2
+4,Melisandre,2
+4,Theon Greyjoy,2
+4,Joffrey Baratheon,2
+4,Bran Stark,2
+4,Sansa Stark,2
+4,Brienne of Tarth,2
+4,Shae,2
+4,Ramsay Snow,2
+4,Lord Varys,2
+4,Bronn,2
+4,Olenna Tyrell,2
+4,Oberyn Martell,2
+4,Ellaria Sand,2
+4,Roose Bolton,2
+4,Grand Maester Pycelle,2
+4,Locke,2
+4,Selyse Baratheon,2
+4,Mace Tyrell,2
+4,Loras Tyrell,2
+4,Jojen Reed,2
+4,Meera Reed,2
+4,Hodor,2
+4,Tommen Baratheon,2
+4,Podrick Payne,2
+4,Meryn Trant,2
+4,Dontos Hollard,2
+4,Shireen Baratheon,2
+4,Myranda,2
+4,Tansy,2
+4,High Septon,2
+4,Walda Bolton,2
+4,Axell Florent,2
+4,Kayla,2
+4,King Joffrey Baratheon Dwarf,2
+4,King Stannis Baratheon Dwarf,2
+4,King Renly Baratheon Dwarf,2
+4,King Robb Stark Dwarf,2
+4,King Balon Greyjoy Dwarf,2
+4,Noble Man,2
+4,Tyrell Wedding Guest,2
+4,Dragonstone waiter,2
+4,Wedding Guest,2
+4,Noble Lady,2
+4,Three-Eyed Raven,2
+4,Wedding Band,2
+4,Wedding Guest,2
+4,Lannister General,2
+4,Tyrion Lannister,3
+4,Jaime Lannister,3
+4,Cersei Lannister,3
+4,Daenerys Targaryen,3
+4,Jon Snow,3
+4,Petyr Baelish,3
+4,Tywin Lannister,3
+4,Margaery Tyrell,3
+4,Davos Seaworth,3
+4,Stannis Baratheon,3
+4,Joffrey Baratheon,3
+4,Sansa Stark,3
+4,Arya Stark,3
+4,Sandor Clegane,3
+4,Samwell Tarly,3
+4,Ygritte,3
+4,Tormund Giantsbane,3
+4,Gilly,3
+4,Brienne of Tarth,3
+4,Lord Varys,3
+4,Jorah Mormont,3
+4,Olenna Tyrell,3
+4,Oberyn Martell,3
+4,Ellaria Sand,3
+4,Daario Naharis,3
+4,Maester Aemon,3
+4,Barristan Selmy,3
+4,Grand Maester Pycelle,3
+4,Alliser Thorne,3
+4,Styr,3
+4,Janos Slynt,3
+4,Grey Worm,3
+4,Missandei,3
+4,Grenn,3
+4,Eddison Tollett,3
+4,Podrick Payne,3
+4,Dontos Hollard,3
+4,Olyvar,3
+4,Tommen Baratheon,3
+4,Pypar,3
+4,Meryn Trant,3
+4,Hizdahr zo Loraq,3
+4,Farmer Hamlet,3
+4,Shireen Baratheon,3
+4,Olly,3
+4,Guymon,3
+4,Olly's Mother,3
+4,Mole's Town Whore,3
+4,Mole's Town Madam,3
+4,Thenn Warg,3
+4,Othell Yarwyck,3
+4,High Septon,3
+4,Night's Watchman,3
+4,Farmer's Daughter,3
+4,Marei,3
+4,King's Landing Whore,3
+4,Meereen Slave,3
+4,Manservant,3
+4,Mole's Town Brothel Patron,3
+4,Meereen Slave Master,3
+4,Mole's Town Whore,3
+4,Oznak zo Pahl,3
+4,Night's Watch Officer,3
+4,Tyrion Lannister,4
+4,Jaime Lannister,4
+4,Cersei Lannister,4
+4,Daenerys Targaryen,4
+4,Jon Snow,4
+4,Petyr Baelish,4
+4,Margaery Tyrell,4
+4,Samwell Tarly,4
+4,Bran Stark,4
+4,Sansa Stark,4
+4,Brienne of Tarth,4
+4,Bronn,4
+4,Jorah Mormont,4
+4,Olenna Tyrell,4
+4,Daario Naharis,4
+4,Barristan Selmy,4
+4,Alliser Thorne,4
+4,Karl Tanner,4
+4,Locke,4
+4,Janos Slynt,4
+4,Missandei,4
+4,Grey Worm,4
+4,Jojen Reed,4
+4,Meera Reed,4
+4,Hodor,4
+4,Grenn,4
+4,Eddison Tollett,4
+4,Rast,4
+4,Tommen Baratheon,4
+4,Podrick Payne,4
+4,Pypar,4
+4,Olly,4
+4,Mossador,4
+4,Elder Meereen Slave,4
+4,White Walker,4
+4,The Night King,4
+4,Morag,4
+4,Valyrian Slave,4
+4,Unsullied,4
+4,Sissy,4
+4,Littlefinger's Crew,4
+4,Craster's Wife,4
+4,Night's Watch Officer,4
+4,Jaime Lannister,5
+4,Cersei Lannister,5
+4,Daenerys Targaryen,5
+4,Jon Snow,5
+4,Petyr Baelish,5
+4,Tywin Lannister,5
+4,Margaery Tyrell,5
+4,Bran Stark,5
+4,Sansa Stark,5
+4,Arya Stark,5
+4,Sandor Clegane,5
+4,Brienne of Tarth,5
+4,Lord Varys,5
+4,Jorah Mormont,5
+4,Oberyn Martell,5
+4,Daario Naharis,5
+4,Karl Tanner,5
+4,Lysa Arryn,5
+4,Barristan Selmy,5
+4,Grand Maester Pycelle,5
+4,Locke,5
+4,Mace Tyrell,5
+4,Jojen Reed,5
+4,Meera Reed,5
+4,Missandei,5
+4,Grey Worm,5
+4,Tommen Baratheon,5
+4,Podrick Payne,5
+4,Loras Tyrell,5
+4,Hodor,5
+4,Grenn,5
+4,Eddison Tollett,5
+4,Rast,5
+4,Morag,5
+4,Robin Arryn,5
+4,High Septon,5
+4,Sissy,5
+4,Donnel Waynwood,5
+4,King's Landing Handmaiden,5
+4,Night's Watch,5
+4,Craster's Wife,5
+4,Lannister General,5
+4,Tyrion Lannister,6
+4,Jaime Lannister,6
+4,Cersei Lannister,6
+4,Daenerys Targaryen,6
+4,Tywin Lannister,6
+4,Margaery Tyrell,6
+4,Davos Seaworth,6
+4,Stannis Baratheon,6
+4,Theon Greyjoy,6
+4,Ramsay Snow,6
+4,Lord Varys,6
+4,Shae,6
+4,Jorah Mormont,6
+4,Oberyn Martell,6
+4,Grand Maester Pycelle,6
+4,Barristan Selmy,6
+4,Tycho Nestoris,6
+4,Mace Tyrell,6
+4,Salladhor Saan,6
+4,Missandei,6
+4,Grey Worm,6
+4,Yara Greyjoy,6
+4,Loras Tyrell,6
+4,Tommen Baratheon,6
+4,Meryn Trant,6
+4,Hizdahr zo Loraq,6
+4,Myranda,6
+4,Goatherd,6
+4,First Mate,6
+4,Lhara,6
+4,Bathhouse Prostitute,6
+4,Bathhouse Prostitute,6
+4,Ironborn in Skiff,6
+4,Bolton Guard,6
+4,Manservant,6
+4,Goatherd's Son,6
+4,Waitress,6
+4,King's Landing Handmaiden,6
+4,Stannis Crew,6
+4,Lannister General,6
+4,Tyrion Lannister,7
+4,Jaime Lannister,7
+4,Cersei Lannister,7
+4,Daenerys Targaryen,7
+4,Jon Snow,7
+4,Petyr Baelish,7
+4,Melisandre,7
+4,Samwell Tarly,7
+4,Sansa Stark,7
+4,Arya Stark,7
+4,Sandor Clegane,7
+4,Brienne of Tarth,7
+4,Bronn,7
+4,Jorah Mormont,7
+4,Oberyn Martell,7
+4,Daario Naharis,7
+4,Alliser Thorne,7
+4,Selyse Baratheon,7
+4,Lysa Arryn,7
+4,Janos Slynt,7
+4,Dying Man,7
+4,Grenn,7
+4,Eddison Tollett,7
+4,Pypar,7
+4,Podrick Payne,7
+4,Robin Arryn,7
+4,Olly,7
+4,Rorge,7
+4,Hot Pie,7
+4,Gregor Clegane,7
+4,Othell Yarwyck,7
+4,Biter,7
+4,Prisoner,7
+4,Knight,7
+4,Night's Watch Officer,7
+4,Tyrion Lannister,8
+4,Jaime Lannister,8
+4,Cersei Lannister,8
+4,Daenerys Targaryen,8
+4,Jon Snow,8
+4,Petyr Baelish,8
+4,Tywin Lannister,8
+4,Theon Greyjoy,8
+4,Samwell Tarly,8
+4,Sansa Stark,8
+4,Arya Stark,8
+4,Ygritte,8
+4,Tormund Giantsbane,8
+4,Gilly,8
+4,Ramsay Snow,8
+4,Lord Varys,8
+4,Sandor Clegane,8
+4,Jorah Mormont,8
+4,Oberyn Martell,8
+4,Ellaria Sand,8
+4,Roose Bolton,8
+4,Barristan Selmy,8
+4,Grand Maester Pycelle,8
+4,Mace Tyrell,8
+4,Styr,8
+4,Grey Worm,8
+4,Missandei,8
+4,Grenn,8
+4,Eddison Tollett,8
+4,Pypar,8
+4,Anya Waynwood,8
+4,Yohn Royce,8
+4,Gregor Clegane,8
+4,Ralf Kenning,8
+4,Robin Arryn,8
+4,Mole's Town Whore,8
+4,Adrack Humble,8
+4,Donnel Waynwood,8
+4,Vance Corbray,8
+4,Mole's Town Madam,8
+4,Kegs,8
+4,Black Jack Bulwer,8
+4,Mully,8
+4,Little Bird,8
+4,Mole's Town Whore,8
+4,Bolton Guard,8
+4,Jon Snow,9
+4,Samwell Tarly,9
+4,Gilly,9
+4,Ygritte,9
+4,Tormund Giantsbane,9
+4,Maester Aemon,9
+4,Alliser Thorne,9
+4,Janos Slynt,9
+4,Grenn,9
+4,Eddison Tollett,9
+4,Styr,9
+4,Pypar,9
+4,Olly,9
+4,Thenn Warg,9
+4,Dongo the Giant,9
+4,Mag the Mighty,9
+4,Cooper,9
+4,Thenn Warrior,9
+4,Night's Watch Archer,9
+4,Donnel Hill,9
+4,Night's Watch Officer,9
+4,Tyrion Lannister,10
+4,Jaime Lannister,10
+4,Cersei Lannister,10
+4,Daenerys Targaryen,10
+4,Jon Snow,10
+4,Tywin Lannister,10
+4,Davos Seaworth,10
+4,Stannis Baratheon,10
+4,Melisandre,10
+4,Samwell Tarly,10
+4,Bran Stark,10
+4,Arya Stark,10
+4,Sandor Clegane,10
+4,Ygritte,10
+4,Tormund Giantsbane,10
+4,Brienne of Tarth,10
+4,Lord Varys,10
+4,Shae,10
+4,Mance Rayder,10
+4,Maester Aemon,10
+4,Grand Maester Pycelle,10
+4,Qyburn,10
+4,Barristan Selmy,10
+4,Three-Eyed Raven,10
+4,Jojen Reed,10
+4,Meera Reed,10
+4,Hodor,10
+4,Selyse Baratheon,10
+4,Janos Slynt,10
+4,Grey Worm,10
+4,Missandei,10
+4,Grenn,10
+4,Eddison Tollett,10
+4,Pypar,10
+4,Podrick Payne,10
+4,Fennesz,10
+4,Olly,10
+4,Shireen Baratheon,10
+4,Leaf,10
+4,Gregor Clegane,10
+4,Goatherd,10
+4,Ternesio Terys,10
+4,Dongo the Giant,10
+4,Wight,10
+4,Baratheon Soldier,10
+4,Baratheon Soldier,10
+4,Night's Watch Officer,10
+5,Tyrion Lannister,1
+5,Jaime Lannister,1
+5,Cersei Lannister,1
+5,Daenerys Targaryen,1
+5,Jon Snow,1
+5,Petyr Baelish,1
+5,Tywin Lannister,1
+5,Margaery Tyrell,1
+5,Stannis Baratheon,1
+5,Davos Seaworth,1
+5,Melisandre,1
+5,Samwell Tarly,1
+5,Sansa Stark,1
+5,Tormund Giantsbane,1
+5,Gilly,1
+5,Lord Varys,1
+5,Brienne of Tarth,1
+5,Daario Naharis,1
+5,Missandei,1
+5,Tommen Baratheon,1
+5,Mance Rayder,1
+5,Alliser Thorne,1
+5,Barristan Selmy,1
+5,Grand Maester Pycelle,1
+5,Selyse Baratheon,1
+5,Mace Tyrell,1
+5,Grey Worm,1
+5,Loras Tyrell,1
+5,Podrick Payne,1
+5,Maggy,1
+5,Janos Slynt,1
+5,Hizdahr zo Loraq,1
+5,Eddison Tollett,1
+5,Lancel Lannister,1
+5,Olyvar,1
+5,Yohn Royce,1
+5,Meryn Trant,1
+5,Kevan Lannister,1
+5,Olly,1
+5,Shireen Baratheon,1
+5,High Septon,1
+5,Mossador,1
+5,Bowen Marsh,1
+5,Robin Arryn,1
+5,Young Cersei Lannister,1
+5,Melara Hetherspoon,1
+5,White Rat,1
+5,Strong Sam Stone,1
+5,Vala,1
+5,Sparring Boy,1
+5,Maester Helliweg,1
+5,Baratheon Soldier,1
+5,Lannister Lord,1
+5,Vale Lord,1
+5,Baratheon Soldier,1
+5,Night's Watch Officer,1
+5,Tyrion Lannister,2
+5,Jaime Lannister,2
+5,Cersei Lannister,2
+5,Daenerys Targaryen,2
+5,Jon Snow,2
+5,Petyr Baelish,2
+5,Stannis Baratheon,2
+5,Davos Seaworth,2
+5,Ellaria Sand,2
+5,Arya Stark,2
+5,Sansa Stark,2
+5,Lord Varys,2
+5,Bronn,2
+5,Samwell Tarly,2
+5,Gilly,2
+5,Brienne of Tarth,2
+5,Missandei,2
+5,Daario Naharis,2
+5,Jaqen H'ghar,2
+5,Maester Aemon,2
+5,Barristan Selmy,2
+5,Grand Maester Pycelle,2
+5,Qyburn,2
+5,Selyse Baratheon,2
+5,Alliser Thorne,2
+5,Doran Martell,2
+5,Grey Worm,2
+5,Eddison Tollett,2
+5,Janos Slynt,2
+5,Podrick Payne,2
+5,Mace Tyrell,2
+5,Hizdahr zo Loraq,2
+5,Areo Hotah,2
+5,Kevan Lannister,2
+5,Meryn Trant,2
+5,Mossador,2
+5,Shireen Baratheon,2
+5,Olly,2
+5,Myrcella Baratheon,2
+5,Trystane Martell,2
+5,Lollys Stokeworth,2
+5,Faceless Man,2
+5,Othell Yarwyck,2
+5,Ternesio Terys,2
+5,Denys Mallister,2
+5,Bowen Marsh,2
+5,Mallister Supporter,2
+5,Eyrie Guard,2
+5,Inn Waitress,2
+5,Son of the Harpy,2
+5,Night's Watch Officer,2
+5,Tyrion Lannister,3
+5,Cersei Lannister,3
+5,Jon Snow,3
+5,Petyr Baelish,3
+5,Margaery Tyrell,3
+5,Stannis Baratheon,3
+5,Davos Seaworth,3
+5,Lord Varys,3
+5,Theon Greyjoy,3
+5,Sansa Stark,3
+5,Arya Stark,3
+5,Samwell Tarly,3
+5,Brienne of Tarth,3
+5,Tommen Baratheon,3
+5,Jaqen H'ghar,3
+5,Roose Bolton,3
+5,Ramsay Bolton,3
+5,Jorah Mormont,3
+5,High Sparrow,3
+5,Grand Maester Pycelle,3
+5,Qyburn,3
+5,Alliser Thorne,3
+5,Mace Tyrell,3
+5,Eddison Tollett,3
+5,The Waif,3
+5,Podrick Payne,3
+5,Janos Slynt,3
+5,Meryn Trant,3
+5,Lancel Lannister,3
+5,Olly,3
+5,Olyvar,3
+5,Loras Tyrell,3
+5,Myranda,3
+5,Street Red Priestess Volantis,3
+5,Walda Bolton,3
+5,High Septon,3
+5,Othell Yarwyck,3
+5,Bowen Marsh,3
+5,Old Woman,3
+5,Brothel Guard,3
+5,Despondent Man,3
+5,Clea,3
+5,Beggar Woman,3
+5,"The Stranger /  
+            The Mother of Dragons",3
+5,The Warrior,3
+5,The Smith,3
+5,The Mother,3
+5,The Maiden,3
+5,The Crone,3
+5,Baratheon Soldier,3
+5,Lannister Lord,3
+5,Night's Watch,3
+5,Night's Watch Officer,3
+5,Tyrion Lannister,4
+5,Jaime Lannister,4
+5,Cersei Lannister,4
+5,Daenerys Targaryen,4
+5,Jon Snow,4
+5,Petyr Baelish,4
+5,Margaery Tyrell,4
+5,Stannis Baratheon,4
+5,Melisandre,4
+5,Ellaria Sand,4
+5,Samwell Tarly,4
+5,Sansa Stark,4
+5,Bronn,4
+5,Daario Naharis,4
+5,Missandei,4
+5,Tommen Baratheon,4
+5,Jorah Mormont,4
+5,High Sparrow,4
+5,Barristan Selmy,4
+5,Grand Maester Pycelle,4
+5,Qyburn,4
+5,Selyse Baratheon,4
+5,Mace Tyrell,4
+5,Grey Worm,4
+5,Meryn Trant,4
+5,Hizdahr zo Loraq,4
+5,Lancel Lannister,4
+5,Eddison Tollett,4
+5,Obara Sand,4
+5,Tyene Sand,4
+5,Nymeria Sand,4
+5,Shireen Baratheon,4
+5,Olly,4
+5,Loras Tyrell,4
+5,Olyvar,4
+5,Merchant Captain,4
+5,Lead Dornish Guard,4
+5,Marei,4
+5,Vala,4
+5,Second Son,4
+5,Lead Kingsguard,4
+5,Foreign Merchant,4
+5,Brothel Customer,4
+5,Nights Watch,4
+5,Tyrion Lannister,5
+5,Daenerys Targaryen,5
+5,Jon Snow,5
+5,Stannis Baratheon,5
+5,Davos Seaworth,5
+5,Melisandre,5
+5,Theon Greyjoy,5
+5,Samwell Tarly,5
+5,Sansa Stark,5
+5,Gilly,5
+5,Daario Naharis,5
+5,Missandei,5
+5,Brienne of Tarth,5
+5,Tormund Giantsbane,5
+5,Roose Bolton,5
+5,Ramsay Bolton,5
+5,Jorah Mormont,5
+5,Barristan Selmy,5
+5,Maester Aemon,5
+5,Selyse Baratheon,5
+5,Alliser Thorne,5
+5,Grey Worm,5
+5,Hizdahr zo Loraq,5
+5,Eddison Tollett,5
+5,Podrick Payne,5
+5,Myranda,5
+5,Shireen Baratheon,5
+5,Olly,5
+5,Walda Bolton,5
+5,Othell Yarwyck,5
+5,Bowen Marsh,5
+5,Old Woman,5
+5,Winter Town Man,5
+5,Night's Watch,5
+5,Night's Watch Officer,5
+5,Stone Man,5
+5,Tyrion Lannister,6
+5,Jaime Lannister,6
+5,Cersei Lannister,6
+5,Petyr Baelish,6
+5,Margaery Tyrell,6
+5,Ellaria Sand,6
+5,Arya Stark,6
+5,Sansa Stark,6
+5,Bronn,6
+5,Theon Greyjoy,6
+5,Roose Bolton,6
+5,Ramsay Bolton,6
+5,Jaqen H'ghar,6
+5,Tommen Baratheon,6
+5,Jorah Mormont,6
+5,Olenna Tyrell,6
+5,High Sparrow,6
+5,Doran Martell,6
+5,Areo Hotah,6
+5,Obara Sand,6
+5,Tyene Sand,6
+5,Nymeria Sand,6
+5,Loras Tyrell,6
+5,Olyvar,6
+5,Lancel Lannister,6
+5,The Waif,6
+5,Malko,6
+5,Trystane Martell,6
+5,Myrcella Baratheon,6
+5,Myranda,6
+5,Walda Bolton,6
+5,Slaver,6
+5,Joss,6
+5,Ghita,6
+5,Faith Militant,6
+5,Slaver,6
+5,Tyrion Lannister,7
+5,Jaime Lannister,7
+5,Cersei Lannister,7
+5,Daenerys Targaryen,7
+5,Jon Snow,7
+5,Petyr Baelish,7
+5,Margaery Tyrell,7
+5,Stannis Baratheon,7
+5,Davos Seaworth,7
+5,Melisandre,7
+5,Samwell Tarly,7
+5,Tormund Giantsbane,7
+5,Gilly,7
+5,Tommen Baratheon,7
+5,Theon Greyjoy,7
+5,Sansa Stark,7
+5,Ramsay Bolton,7
+5,Brienne of Tarth,7
+5,Bronn,7
+5,Daario Naharis,7
+5,Jorah Mormont,7
+5,Olenna Tyrell,7
+5,High Sparrow,7
+5,Maester Aemon,7
+5,Alliser Thorne,7
+5,Eddison Tollett,7
+5,Areo Hotah,7
+5,Yezzan zo Qaggaz,7
+5,Obara Sand,7
+5,Tyene Sand,7
+5,Nymeria Sand,7
+5,Podrick Payne,7
+5,Hizdahr zo Loraq,7
+5,Myrcella Baratheon,7
+5,Olly,7
+5,Lancel Lannister,7
+5,Malko,7
+5,Septa Unella,7
+5,Othell Yarwyck,7
+5,Bowen Marsh,7
+5,Derek,7
+5,Brant,7
+5,Tyrell Guard,7
+5,Fighter,7
+5,Baratheon Soldier,7
+5,Fighter,7
+5,Volantis Fighter,7
+5,Baratheon Soldier,7
+5,Night's Watch Officer,7
+5,Tyrion Lannister,8
+5,Cersei Lannister,8
+5,Daenerys Targaryen,8
+5,Jon Snow,8
+5,Sansa Stark,8
+5,Arya Stark,8
+5,Samwell Tarly,8
+5,Gilly,8
+5,Tormund Giantsbane,8
+5,Theon Greyjoy,8
+5,Missandei,8
+5,Jaqen H'ghar,8
+5,Roose Bolton,8
+5,Ramsay Bolton,8
+5,Jorah Mormont,8
+5,Qyburn,8
+5,Eddison Tollett,8
+5,The Waif,8
+5,Karsi,8
+5,Yezzan zo Qaggaz,8
+5,Loboda,8
+5,Septa Unella,8
+5,Olly,8
+5,The Night King,8
+5,Wun Wun,8
+5,Lord of Bones,8
+5,Dim Dalba,8
+5,Todder,8
+5,Thin Man,8
+5,Lhara,8
+5,Braavosi Captain,8
+5,Black Armored White Walker,8
+5,Johnna,8
+5,Willa,8
+5,Wildling,8
+5,Wildling Archer,8
+5,Wight,8
+5,Wildling,8
+5,Wildling,8
+5,Wildling Archer,8
+5,Nights Watch,8
+5,Wight,8
+5,Wildling,8
+5,Wildling,8
+5,Wildling,8
+5,Wildling,8
+5,Night's Watch Officer,8
+5,Wildling,8
+5,Tyrion Lannister,9
+5,Jaime Lannister,9
+5,Daenerys Targaryen,9
+5,Jon Snow,9
+5,Stannis Baratheon,9
+5,Davos Seaworth,9
+5,Melisandre,9
+5,Ellaria Sand,9
+5,Arya Stark,9
+5,Bronn,9
+5,Samwell Tarly,9
+5,Tormund Giantsbane,9
+5,Jaqen H'ghar,9
+5,Daario Naharis,9
+5,Missandei,9
+5,Jorah Mormont,9
+5,Alliser Thorne,9
+5,Selyse Baratheon,9
+5,Tycho Nestoris,9
+5,Doran Martell,9
+5,Areo Hotah,9
+5,Hizdahr zo Loraq,9
+5,Meryn Trant,9
+5,Mace Tyrell,9
+5,Eddison Tollett,9
+5,Obara Sand,9
+5,Tyene Sand,9
+5,Nymeria Sand,9
+5,Myrcella Baratheon,9
+5,Trystane Martell,9
+5,Shireen Baratheon,9
+5,Olly,9
+5,Wun Wun,9
+5,Pit Announcer,9
+5,Thin Man,9
+5,Braavosi Madam,9
+5,Young Braavosi,9
+5,Lhara,9
+5,Willa,9
+5,Johnna,9
+5,Othell Yarwyck,9
+5,Bowen Marsh,9
+5,Brusco,9
+5,Sailor,9
+5,Young Baratheon Soldier,9
+5,Anara,9
+5,Brea,9
+5,Whore,9
+5,Aya,9
+5,Strong Fighter,9
+5,Baratheon Soldier,9
+5,Pit Fighter,9
+5,Wilding Gladiator,9
+5,Stannis Soldier,9
+5,Baratheon Soldier,9
+5,Baratheon Soldier,9
+5,Wildling,9
+5,Night's Watch Officer,9
+5,Tyrion Lannister,10
+5,Jaime Lannister,10
+5,Cersei Lannister,10
+5,Daenerys Targaryen,10
+5,Jon Snow,10
+5,Stannis Baratheon,10
+5,Davos Seaworth,10
+5,Melisandre,10
+5,Ellaria Sand,10
+5,Arya Stark,10
+5,Sansa Stark,10
+5,Samwell Tarly,10
+5,Gilly,10
+5,Missandei,10
+5,Daario Naharis,10
+5,Lord Varys,10
+5,Bronn,10
+5,Theon Greyjoy,10
+5,Ramsay Bolton,10
+5,Brienne of Tarth,10
+5,Jaqen H'ghar,10
+5,Jorah Mormont,10
+5,High Sparrow,10
+5,Alliser Thorne,10
+5,Selyse Baratheon,10
+5,Meryn Trant,10
+5,Qyburn,10
+5,Grand Maester Pycelle,10
+5,Doran Martell,10
+5,Grey Worm,10
+5,Podrick Payne,10
+5,The Waif,10
+5,Areo Hotah,10
+5,Obara Sand,10
+5,Tyene Sand,10
+5,Nymeria Sand,10
+5,Olly,10
+5,Myranda,10
+5,Kevan Lannister,10
+5,Myrcella Baratheon,10
+5,Trystane Martell,10
+5,Septa Unella,10
+5,Gregor Clegane,10
+5,Othell Yarwyck,10
+5,Bowen Marsh,10
+5,Baratheon General,10
+5,Septa Moelle,10
+5,Septa Scolera,10
+5,Ghita,10
+5,Gordy,10
+5,Simpson,10
+5,Woodcutter,10
+5,King's Landing Drunkard,10
+5,King's Landing Whore,10
+5,Cersei Body Double,10
+5,Baratheon Soldier,10
+5,Baratheon Soldier,10
+6,Tyrion Lannister,1
+6,Jaime Lannister,1
+6,Cersei Lannister,1
+6,Daenerys Targaryen,1
+6,Jon Snow,1
+6,Davos Seaworth,1
+6,Melisandre,1
+6,Margaery Tyrell,1
+6,Ellaria Sand,1
+6,Sansa Stark,1
+6,Arya Stark,1
+6,Lord Varys,1
+6,Theon Greyjoy,1
+6,Brienne of Tarth,1
+6,High Sparrow,1
+6,Daario Naharis,1
+6,Roose Bolton,1
+6,Ramsay Bolton,1
+6,Jorah Mormont,1
+6,Alliser Thorne,1
+6,Eddison Tollett,1
+6,Doran Martell,1
+6,Areo Hotah,1
+6,The Waif,1
+6,Podrick Payne,1
+6,Obara Sand,1
+6,Tyene Sand,1
+6,Nymeria Sand,1
+6,Septa Unella,1
+6,Trystane Martell,1
+6,Olly,1
+6,Gregor Clegane,1
+6,Myranda,1
+6,Khal Moro,1
+6,Aggo,1
+6,Qhono,1
+6,Zanrush,1
+6,Maester Wolkan,1
+6,Bernadette,1
+6,Othell Yarwyck,1
+6,Bowen Marsh,1
+6,Bolton Officer,1
+6,Bolton Soldier,1
+6,Meereenese Homeless Mother,1
+6,Maester Caleotte,1
+6,Night's Watch,1
+6,Night's Watch Officer,1
+6,Tyrion Lannister,2
+6,Jaime Lannister,2
+6,Cersei Lannister,2
+6,Jon Snow,2
+6,Davos Seaworth,2
+6,Melisandre,2
+6,Sansa Stark,2
+6,Missandei,2
+6,Arya Stark,2
+6,Lord Varys,2
+6,High Sparrow,2
+6,Tormund Giantsbane,2
+6,Theon Greyjoy,2
+6,Jaqen H'ghar,2
+6,Ramsay Bolton,2
+6,Roose Bolton,2
+6,Brienne of Tarth,2
+6,Tommen Baratheon,2
+6,Bran Stark,2
+6,Three-Eyed Raven,2
+6,Balon Greyjoy,2
+6,Alliser Thorne,2
+6,Eddison Tollett,2
+6,Euron Greyjoy,2
+6,Aeron Greyjoy,2
+6,Grey Worm,2
+6,Yara Greyjoy,2
+6,Hodor,2
+6,The Waif,2
+6,Meera Reed,2
+6,Podrick Payne,2
+6,Wun Wun,2
+6,Leaf,2
+6,Gregor Clegane,2
+6,Walda Bolton,2
+6,King's Landing Boaster,2
+6,Maester Wolkan,2
+6,Harald Karstark,2
+6,Olly,2
+6,Myrcella Baratheon,2
+6,Young Nan,2
+6,Wyllis,2
+6,Young Rodrik Cassel,2
+6,Lannister Captain,2
+6,Young Ned Stark,2
+6,Young Lyanna Stark,2
+6,Young Benjen Stark,2
+6,Othell Yarwyck,2
+6,Bowen Marsh,2
+6,Tavern Maid,2
+6,Merchant in Tavern,2
+6,Night's Watch,2
+6,Wildling,2
+6,Tyrion Lannister,3
+6,Jaime Lannister,3
+6,Cersei Lannister,3
+6,Daenerys Targaryen,3
+6,Jon Snow,3
+6,Davos Seaworth,3
+6,Melisandre,3
+6,Missandei,3
+6,Arya Stark,3
+6,Lord Varys,3
+6,Tormund Giantsbane,3
+6,Bran Stark,3
+6,Samwell Tarly,3
+6,Ramsay Bolton,3
+6,High Sparrow,3
+6,Tommen Baratheon,3
+6,Gilly,3
+6,Jaqen H'ghar,3
+6,Three-Eyed Raven,3
+6,Olenna Tyrell,3
+6,Alliser Thorne,3
+6,Qyburn,3
+6,Grand Maester Pycelle,3
+6,Grey Worm,3
+6,Osha,3
+6,Eddison Tollett,3
+6,The Waif,3
+6,Mace Tyrell,3
+6,Kevan Lannister,3
+6,Gregor Clegane,3
+6,Olly,3
+6,Leaf,3
+6,Smalljon Umber,3
+6,Harald Karstark,3
+6,Rickon Stark,3
+6,Vala,3
+6,Khal Moro,3
+6,Dosh khaleen High Priestess,3
+6,Qhono,3
+6,Ornela,3
+6,Young Ned,3
+6,Arthur Dayne,3
+6,Gerold Hightower,3
+6,Othell Yarwyck,3
+6,Bowen Marsh,3
+6,Frances,3
+6,Arthur,3
+6,Night's Watch,3
+6,Tully Soldier,3
+6,Aggo,3
+6,Wildling,3
+6,Night's Watch Officer,3
+6,Howland Reed,3
+6,Tyrion Lannister,4
+6,Jaime Lannister,4
+6,Cersei Lannister,4
+6,Daenerys Targaryen,4
+6,Jon Snow,4
+6,Margaery Tyrell,4
+6,Petyr Baelish,4
+6,Davos Seaworth,4
+6,Melisandre,4
+6,Sansa Stark,4
+6,Missandei,4
+6,Lord Varys,4
+6,Tormund Giantsbane,4
+6,High Sparrow,4
+6,Daario Naharis,4
+6,Tommen Baratheon,4
+6,Ramsay Bolton,4
+6,Brienne of Tarth,4
+6,Theon Greyjoy,4
+6,Jorah Mormont,4
+6,Olenna Tyrell,4
+6,Eddison Tollett,4
+6,Grey Worm,4
+6,Osha,4
+6,Yara Greyjoy,4
+6,Loras Tyrell,4
+6,Grand Maester Pycelle,4
+6,Kevan Lannister,4
+6,Yohn Royce,4
+6,Podrick Payne,4
+6,Septa Unella,4
+6,Robin Arryn,4
+6,Yezzan zo Qaggaz,4
+6,Razdal mo Eraz,4
+6,Belicho Paenymion,4
+6,Ash,4
+6,Kesh,4
+6,Khal Moro,4
+6,Khal Forzho,4
+6,Dosh khaleen High Priestess,4
+6,Ornela,4
+6,Aggo,4
+6,Qhono,4
+6,Iggo,4
+6,Khal Brozho,4
+6,Khal Rhalko,4
+6,Khal Qorro,4
+6,Night's Watchman,4
+6,Dothraki Woman Having Sex,4
+6,Dothraki Man Having Sex,4
+6,Night's Watch,4
+6,Wildling,4
+6,Night's Watch Officer,4
+6,Tyrion Lannister,5
+6,Daenerys Targaryen,5
+6,Jon Snow,5
+6,Petyr Baelish,5
+6,Davos Seaworth,5
+6,Melisandre,5
+6,Sansa Stark,5
+6,Missandei,5
+6,Arya Stark,5
+6,Lord Varys,5
+6,Bran Stark,5
+6,Tormund Giantsbane,5
+6,Theon Greyjoy,5
+6,Daario Naharis,5
+6,Brienne of Tarth,5
+6,Jaqen H'ghar,5
+6,Jorah Mormont,5
+6,Three-Eyed Raven,5
+6,Hodor,5
+6,Izembaro,5
+6,Lady Crane,5
+6,Euron Greyjoy,5
+6,Yara Greyjoy,5
+6,Eddison Tollett,5
+6,Meera Reed,5
+6,The Waif,5
+6,Grey Worm,5
+6,Aeron Greyjoy,5
+6,Leaf,5
+6,Podrick Payne,5
+6,Camello,5
+6,Bobono,5
+6,Bianca,5
+6,Clarenzo,5
+6,Margaery Tyrell Mummer,5
+6,The Night King,5
+6,Kinvara,5
+6,Zanrush,5
+6,Young Nan,5
+6,Wyllis,5
+6,Rickard Stark,5
+6,Young Ned Stark,5
+6,Young Benjen Stark,5
+6,Young Rodrik Cassel,5
+6,Ironborn,5
+6,Braavosi Theatre Server,5
+6,Night's Watch,5
+6,Wight,5
+6,Braavosi Theatre Sound Artist,5
+6,Jaime Lannister,6
+6,Cersei Lannister,6
+6,Daenerys Targaryen,6
+6,Margaery Tyrell,6
+6,Arya Stark,6
+6,High Sparrow,6
+6,Samwell Tarly,6
+6,Bran Stark,6
+6,Daario Naharis,6
+6,Jaqen H'ghar,6
+6,Tommen Baratheon,6
+6,Gilly,6
+6,Olenna Tyrell,6
+6,Izembaro,6
+6,Walder Frey,6
+6,Lady Crane,6
+6,Benjen Stark,6
+6,Edmure Tully,6
+6,Meera Reed,6
+6,The Waif,6
+6,Mace Tyrell,6
+6,Kevan Lannister,6
+6,Septa Unella,6
+6,Randyll Tarly,6
+6,Melessa Tarly,6
+6,Lancel Lannister,6
+6,Black Walder Rivers,6
+6,Lothar Frey,6
+6,Camello,6
+6,Bobono,6
+6,Bianca,6
+6,Clarenzo,6
+6,Margaery Tyrell Mummer,6
+6,Aerys Targaryen,6
+6,Dickon Tarly,6
+6,Talla Tarly,6
+6,Young Ned,6
+6,Tyrell Bannerman,6
+6,Lady Kitty Frey,6
+6,Baby Sam,6
+6,Baby Sam,6
+6,Frey Daughter,6
+6,Braavosi Theatre Server,6
+6,Man,6
+6,Braavosi Theatre Sound Artist,6
+6,Jaime Lannister,7
+6,Cersei Lannister,7
+6,Jon Snow,7
+6,Margaery Tyrell,7
+6,Davos Seaworth,7
+6,Sansa Stark,7
+6,Sandor Clegane,7
+6,Arya Stark,7
+6,High Sparrow,7
+6,Tormund Giantsbane,7
+6,Bronn,7
+6,Theon Greyjoy,7
+6,Brother Ray,7
+6,Olenna Tyrell,7
+6,Brynden Tully,7
+6,Edmure Tully,7
+6,Yara Greyjoy,7
+6,The Waif,7
+6,Lem Lemoncloak,7
+6,Robett Glover,7
+6,Wun Wun,7
+6,Gregor Clegane,7
+6,Black Walder Rivers,7
+6,Lothar Frey,7
+6,Gatins,7
+6,Morgan,7
+6,Dim Dalba,7
+6,Septa Unella,7
+6,Lyanna Mormont,7
+6,The Waif's Disguise,7
+6,Westerosi Trader,7
+6,Bear Island Maester,7
+6,Northman Rioter,7
+6,Wildling Rioter,7
+6,Lannister Soldier,7
+6,Ironborn at Brothel,7
+6,Ironborn Abusing a Volantene Whore,7
+6,Volantene Whore,7
+6,"Ironborn at Brothel /  
+            Tully Guard",7
+6,Soldier,7
+6,Volantene Whore,7
+6,Glover General,7
+6,Volantene Whore,7
+6,Tyrion Lannister,8
+6,Jaime Lannister,8
+6,Cersei Lannister,8
+6,Daenerys Targaryen,8
+6,Missandei,8
+6,Arya Stark,8
+6,Lord Varys,8
+6,Sandor Clegane,8
+6,Bronn,8
+6,Brienne of Tarth,8
+6,Jaqen H'ghar,8
+6,Tommen Baratheon,8
+6,Izembaro,8
+6,Lady Crane,8
+6,Grand Maester Pycelle,8
+6,Qyburn,8
+6,Kevan Lannister,8
+6,The Waif,8
+6,Grey Worm,8
+6,Beric Dondarrion,8
+6,Thoros of Myr,8
+6,Brynden Tully,8
+6,Edmure Tully,8
+6,Black Walder Rivers,8
+6,Lothar Frey,8
+6,Podrick Payne,8
+6,Lancel Lannister,8
+6,Mace Tyrell,8
+6,Gregor Clegane,8
+6,Lem Lemoncloak,8
+6,Street Red Priestess Meereen,8
+6,Bobono,8
+6,Clarenzo,8
+6,Tully Bannerman,8
+6,Gatins,8
+6,Morgan,8
+6,Riddell,8
+6,Steve,8
+6,Lannister Soldier,8
+6,The Waif's Disguise,8
+6,Kingsland Taverner,8
+6,Brotherhood Member,8
+6,Healtor Troop,8
+6,King's Landing Nobleman (2016),8
+6,Tully Troop,8
+6,Tyrion Lannister,9
+6,Jon Snow,9
+6,Daenerys Targaryen,9
+6,Davos Seaworth,9
+6,Sansa Stark,9
+6,Petyr Baelish,9
+6,Melisandre,9
+6,Missandei,9
+6,Tormund Giantsbane,9
+6,Ramsay Bolton,9
+6,Theon Greyjoy,9
+6,Daario Naharis,9
+6,Grey Worm,9
+6,Yara Greyjoy,9
+6,Wun Wun,9
+6,Yezzan zo Qaggaz,9
+6,Harald Karstark,9
+6,Smalljon Umber,9
+6,Rickon Stark,9
+6,Lyanna Mormont,9
+6,Razdal mo Eraz,9
+6,Belicho Paenymion,9
+6,Captain of the Bolton Archers,9
+6,Bolton General,9
+6,Northman Rider,9
+6,Northman Archer,9
+6,Knight,9
+6,Wildling,9
+6,Bolton Soldier,9
+6,Umber Soldier,9
+6,Karstark Lead Archer,9
+6,Jon Snow Soldier,9
+6,Umber Soldier,9
+6,Mormont Soldier,9
+6,Karstark Soldier,9
+6,Bolton Soldier,9
+6,Meereen Guard,9
+6,Tyrion Lannister,10
+6,Jaime Lannister,10
+6,Cersei Lannister,10
+6,Jon Snow,10
+6,Daenerys Targaryen,10
+6,Margaery Tyrell,10
+6,Davos Seaworth,10
+6,Sansa Stark,10
+6,Petyr Baelish,10
+6,Melisandre,10
+6,Missandei,10
+6,Ellaria Sand,10
+6,Arya Stark,10
+6,High Sparrow,10
+6,Lord Varys,10
+6,Tommen Baratheon,10
+6,Tormund Giantsbane,10
+6,Samwell Tarly,10
+6,Bran Stark,10
+6,Bronn,10
+6,Theon Greyjoy,10
+6,Daario Naharis,10
+6,Gilly,10
+6,Olenna Tyrell,10
+6,Walder Frey,10
+6,Grand Maester Pycelle,10
+6,Qyburn,10
+6,Benjen Stark,10
+6,Loras Tyrell,10
+6,Kevan Lannister,10
+6,Mace Tyrell,10
+6,Grey Worm,10
+6,Yara Greyjoy,10
+6,Meera Reed,10
+6,Lancel Lannister,10
+6,Obara Sand,10
+6,Tyene Sand,10
+6,Nymeria Sand,10
+6,Yohn Royce,10
+6,Robett Glover,10
+6,Gregor Clegane,10
+6,Septa Unella,10
+6,Lothar Frey,10
+6,Black Walder Rivers,10
+6,Young Ned,10
+6,Lyanna Stark,10
+6,Citadel Maester,10
+6,Lyanna Mormont,10
+6,Marei,10
+6,Bernadette,10
+6,Handmaid,10
+6,Tommen's Attendant,10
+6,Tommen's Manservant,10
+6,Wyman Manderly,10
+6,Cley Cerwyn,10
+6,Arthur,10
+6,Frances,10
+6,Knight,10
+6,King's Landing Nobleman,10
+6,Glover General,10
+6,Jon Snow Soldier,10
+6,Alys Karstark,10
+6,King's Landing Nobleman (2016),10
+7,Tyrion Lannister,1
+7,Jaime Lannister,1
+7,Cersei Lannister,1
+7,Daenerys Targaryen,1
+7,Jon Snow,1
+7,Petyr Baelish,1
+7,Davos Seaworth,1
+7,Sansa Stark,1
+7,Arya Stark,1
+7,Missandei,1
+7,Brienne of Tarth,1
+7,Lord Varys,1
+7,Samwell Tarly,1
+7,Bran Stark,1
+7,Gilly,1
+7,Tormund Giantsbane,1
+7,Sandor Clegane,1
+7,Jorah Mormont,1
+7,Archmaester Ebrose,1
+7,Euron Greyjoy,1
+7,Walder Frey,1
+7,Qyburn,1
+7,Beric Dondarrion,1
+7,Thoros of Myr,1
+7,Grey Worm,1
+7,Meera Reed,1
+7,Eddison Tollett,1
+7,Gregor Clegane,1
+7,Robett Glover,1
+7,Podrick Payne,1
+7,Yohn Royce,1
+7,Lyanna Mormont,1
+7,Maester Wolkan,1
+7,Lady Kitty Frey,1
+7,Lannister Soldier,1
+7,Lannister Soldier,1
+7,Lannister Soldier,1
+7,Alys Karstark,1
+7,Ned Umber,1
+7,Poisoned Frey,1
+7,Frey Lord,1
+7,Sick Maester,1
+7,Baby Sam,1
+7,Baby Sam,1
+7,Serving Girl,1
+7,Night's Watch,1
+7,Night's Watch,1
+7,Night's Watch,1
+7,Lannister Map Painter,1
+7,Tyrion Lannister,2
+7,Jaime Lannister,2
+7,Cersei Lannister,2
+7,Daenerys Targaryen,2
+7,Jon Snow,2
+7,Petyr Baelish,2
+7,Davos Seaworth,2
+7,Sansa Stark,2
+7,Arya Stark,2
+7,Melisandre,2
+7,Missandei,2
+7,Ellaria Sand,2
+7,Theon Greyjoy,2
+7,Samwell Tarly,2
+7,Brienne of Tarth,2
+7,Lord Varys,2
+7,Jorah Mormont,2
+7,Olenna Tyrell,2
+7,Archmaester Ebrose,2
+7,Euron Greyjoy,2
+7,Yara Greyjoy,2
+7,Qyburn,2
+7,Grey Worm,2
+7,Obara Sand,2
+7,Tyene Sand,2
+7,Nymeria Sand,2
+7,Gregor Clegane,2
+7,Hot Pie,2
+7,Robett Glover,2
+7,Randyll Tarly,2
+7,Yohn Royce,2
+7,Dickon Tarly,2
+7,Lyanna Mormont,2
+7,Maester Wolkan,2
+7,Crossroads Inn Patron,2
+7,Crossroads Inn Patron,2
+7,Alys Karstark,2
+7,Ned Umber,2
+7,Ironborn,2
+7,Silence Crew,2
+7,Tyrion Lannister,3
+7,Jaime Lannister,3
+7,Cersei Lannister,3
+7,Daenerys Targaryen,3
+7,Jon Snow,3
+7,Petyr Baelish,3
+7,Davos Seaworth,3
+7,Melisandre,3
+7,Sansa Stark,3
+7,Missandei,3
+7,Ellaria Sand,3
+7,Theon Greyjoy,3
+7,Samwell Tarly,3
+7,Bran Stark,3
+7,Lord Varys,3
+7,Bronn,3
+7,Jorah Mormont,3
+7,Olenna Tyrell,3
+7,Archmaester Ebrose,3
+7,Euron Greyjoy,3
+7,Yara Greyjoy,3
+7,Grey Worm,3
+7,Qyburn,3
+7,Tycho Nestoris,3
+7,Tyene Sand,3
+7,Meera Reed,3
+7,Gregor Clegane,3
+7,Yohn Royce,3
+7,Randyll Tarly,3
+7,Dickon Tarly,3
+7,Harrag,3
+7,Maester Wolkan,3
+7,Bernadette,3
+7,Stark Soldier,3
+7,Qhono,3
+7,Woman in king's landing,3
+7,Silence Crew,3
+7,Tyrion Lannister,4
+7,Jaime Lannister,4
+7,Cersei Lannister,4
+7,Daenerys Targaryen,4
+7,Jon Snow,4
+7,Petyr Baelish,4
+7,Davos Seaworth,4
+7,Sansa Stark,4
+7,Arya Stark,4
+7,Missandei,4
+7,Lord Varys,4
+7,Bronn,4
+7,Theon Greyjoy,4
+7,Brienne of Tarth,4
+7,Bran Stark,4
+7,Randyll Tarly,4
+7,Dickon Tarly,4
+7,Meera Reed,4
+7,Tycho Nestoris,4
+7,Harrag,4
+7,Podrick Payne,4
+7,Stark Soldier,4
+7,Koner,4
+7,Qhono,4
+7,Winterfell Local,4
+7,Stark Soldier,4
+7,Dothraki Rider,4
+7,Dothraki Rider,4
+7,Burning Lannister,4
+7,Lannister Spearman,4
+7,Burning Lannister,4
+7,Tyrion Lannister,5
+7,Jaime Lannister,5
+7,Cersei Lannister,5
+7,Daenerys Targaryen,5
+7,Jon Snow,5
+7,Petyr Baelish,5
+7,Davos Seaworth,5
+7,Sansa Stark,5
+7,Arya Stark,5
+7,Lord Varys,5
+7,Sandor Clegane,5
+7,Bran Stark,5
+7,Bronn,5
+7,Samwell Tarly,5
+7,Gilly,5
+7,Tormund Giantsbane,5
+7,Gendry,5
+7,Jorah Mormont,5
+7,Archmaester Ebrose,5
+7,Beric Dondarrion,5
+7,Thoros of Myr,5
+7,Qyburn,5
+7,Randyll Tarly,5
+7,Dickon Tarly,5
+7,Robett Glover,5
+7,Yohn Royce,5
+7,Maester Wolkan,5
+7,Goldcloak,5
+7,Citadel Maester,5
+7,Citadel Maester,5
+7,Goldcloak,5
+7,Qhono,5
+7,Baby Sam,5
+7,Baby Sam,5
+7,Winterfell Spy,5
+7,The Night King,5
+7,Meereen Guard,5
+7,Tyrion Lannister,6
+7,Daenerys Targaryen,6
+7,Jon Snow,6
+7,Petyr Baelish,6
+7,Davos Seaworth,6
+7,Sansa Stark,6
+7,Arya Stark,6
+7,Brienne of Tarth,6
+7,Sandor Clegane,6
+7,Tormund Giantsbane,6
+7,Gendry,6
+7,Jorah Mormont,6
+7,Beric Dondarrion,6
+7,Thoros of Myr,6
+7,Benjen Stark,6
+7,Maester Wolkan,6
+7,Captured Wight,6
+7,Wildling,6
+7,The Night King,6
+7,Meereen Guard,6
+7,Tyrion Lannister,7
+7,Jaime Lannister,7
+7,Cersei Lannister,7
+7,Daenerys Targaryen,7
+7,Jon Snow,7
+7,Petyr Baelish,7
+7,Davos Seaworth,7
+7,Sansa Stark,7
+7,Arya Stark,7
+7,Missandei,7
+7,Theon Greyjoy,7
+7,Samwell Tarly,7
+7,Bran Stark,7
+7,Lord Varys,7
+7,Bronn,7
+7,Brienne of Tarth,7
+7,Sandor Clegane,7
+7,Tormund Giantsbane,7
+7,Gilly,7
+7,Jorah Mormont,7
+7,Euron Greyjoy,7
+7,Beric Dondarrion,7
+7,Grey Worm,7
+7,Qyburn,7
+7,Podrick Payne,7
+7,Gregor Clegane,7
+7,Yohn Royce,7
+7,Lyanna Stark,7
+7,Harrag,7
+7,Young Ned,7
+7,Maester Wolkan,7
+7,Rhaegar Targaryen,7
+7,High Septon Maynard,7
+7,Qhono,7
+7,Lannister General,7
+7,Lannister Guard,7
+7,Baby Sam,7
+7,Baby Sam,7
+7,Captured Wight,7
+7,The Night King,7
+7,Meereen Guard,7
