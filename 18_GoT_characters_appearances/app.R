@@ -85,7 +85,8 @@ observe({
         scale_color_manual(values=imported_data$col_vector) +
         scale_x_discrete(labels = imported_data$labels_x_scale %>% names) +
         scale_y_continuous(limits= c(0,16)) +
-        labs(x = "Episode", y = "% appearances", col = "Character")
+        labs(x = "Episode", y = "% appearances", col = "Character") +
+        theme_dark()
       
    }) 
     })
