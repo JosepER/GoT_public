@@ -153,7 +153,7 @@ labels_x_scale <- labels_x_scale[!vector_missing_episodes]
 top_char_estimated_alive_cumulative_counts_wide <- char_estimated_alive_cumulative_counts_wide_for_plot %>%
   head(top_number)
   
-  top_char_estimated_alive_cumulative_counts_wide %>%
+p_1 <- top_char_estimated_alive_cumulative_counts_wide %>%
   gather(key = "season_episode", value = "prop", starts_with("s") ) %>%
   mutate(prop = prop * 100) %>%
   filter(!is.na(prop)) %>%
@@ -162,6 +162,11 @@ top_char_estimated_alive_cumulative_counts_wide <- char_estimated_alive_cumulati
   scale_color_manual(values=col_vector) +
   scale_x_discrete(labels = labels_x_scale %>% names) +
   labs(x = "Episode", y = "% appearances", col = "Character")
+
+p_1 %>% 
+  write_rds("output_articles/static_shiny_graph_16.rds")
+
+p_1
 
 ```
 

@@ -1,0 +1,12 @@
+name: 18_GoT_characters_appearances
+title: 18_GoT_characters_appearances
+username:
+account: josep-espasa
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 302895
+bundleId: 1279514
+url: https://josep-espasa.shinyapps.io/18_GoT_characters_appearances/
+when: 1521590656.75531
+asMultiple: FALSE
+asStatic: FALSE

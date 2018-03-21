@@ -1,0 +1,1526 @@
+---
+title: "16_EDA_of_character_appearances"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+
+
+In this script I perform all kinds of Exploratory Data Analysis (EDA) of character appearances.
+
+```{r}
+
+rm(list = ls())
+
+library(ggthemr)
+library(plotly)
+library(magrittr)
+library(tidyverse)
+library(RColorBrewer)
+
+set.seed(0.6051694)
+
+```
+
+```{r}
+qual_col_pals <- brewer.pal.info[brewer.pal.info$category == 'qual',]
+col_vector <- unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals)))
+```
+
+# Import data
+
+Non imputed data with character appearances
+```{r}
+
+char_counts_by_episode_long_with_imdb <- read_rds("counts/transcripts/counts_by_episode_long_with_imdb_10.RDS")
+
+```
+
+Episode list to spot missing episodes
+```{r}
+
+episode_list_df <- readRDS("interim_output/episode_list_transcripts_03.RDS")
+
+```
+
+IMDB cast data
+```{r}
+
+all_seasons_cast_imdb_df <- read_rds("interim_output/all_seasons_cast_imdb_df_09.RDS")
+
+```
+
+```{r}
+
+characters_dead <- read_rds("interim_output/characters.death.long.02.RDS")
+
+```
+
+```{r}
+
+output_list <- list()
+
+```
+
+# Data management
+
+Compute number of missing episodes 
+```{r}
+
+missing_episodes_df <- episode_list_df %>%
+                          mutate(missing =  if_else(link == "missing episode" | 
+                                                      (season == "season_3" & episode_number %in% c(2,3)) |
+                                                      (season == "season_4" & episode_number  == 1),
+                                                    true = 1,
+                                                    false = 0))
+
+missing_episodes_df <- missing_episodes_df %>%
+   mutate(season = str_extract(season, pattern = "\\d"),
+          episode_char = if_else(episode_number == 10, true = "e10", false = str_c("e0", episode_number)), 
+          season_episode = str_c("s0", season, episode_char, sep = "")) %>%
+  select(season_episode, missing)
+
+```
+
+Compute season and recoded season
+```{r}
+
+char_counts_by_episode_long_with_imdb %<>%
+mutate(season_rec = season_episode %>% str_extract(pattern = "^s\\d{2}") %>%
+           if_else(. %in% c("s02", "s03", "s04"), "s02-s04",. ) )
+
+```
+
+Just as reminder. How many non-missing episodes do I have per season? Many missings in season 2 to season 4. Seasons 1, 5 and 6 are complete and 7 is almost complete. 
+```{r}
+
+missing_episodes_df %>% 
+  filter(missing == 0) %$%
+  season_episode %>%
+  stringr::str_extract(pattern = "^s\\d{2}") %>%
+  table()
+
+```
+
+
+```{r}
+
+char_counts_by_non_missing_episode_long <- char_counts_by_episode_long_with_imdb %>%
+  inner_join(missing_episodes_df %>% filter(missing == 0),
+             by = "season_episode") %>%
+  select(-missing, -cast_imdb, -dead)
+
+```
+
+
+# Explore dispersion of character appearances in transcripts 
+
+Here I check the distribution of character appearances in transcripts across episodes and seasons.
+
+## Number of characters 
+
+### By episode
+
+**Number of characters with transcript appearances in each episode**
+Looks like there might be a trend of less characters participating in the last two seasons. However, there is variation across episodes. 
+```{r}
+
+char_counts_by_non_missing_episode_long %>%
+  filter(appearances > 0) %>%
+  count(season_episode)
+
+```
+
+```{r}
+
+char_appearances_episode_script <- char_counts_by_non_missing_episode_long %>%
+  filter(appearances > 0) %>%
+  count(season_episode) 
+
+char_appearances_episode_script %>%
+  ggplot(aes(x = (season_episode), y = n, group = factor(1))) +
+  geom_point() +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+  geom_smooth()
+  
+```
+
+**Check in IMDB data**
+```{r}
+
+char_appearances_episode_imdb <- all_seasons_cast_imdb_df %>%
+  mutate(season = if_else(as.numeric(season) < 10,
+                          true = str_c("0", season),
+                          false = season %>% as.character),
+         episode = if_else(as.numeric(episode) < 10,
+                           true = str_c("0", episode),
+                           false = episode %>% as.character),  
+    season_episode = str_c("s",season, "e", episode)) %>%
+  group_by(season_episode) %>%
+  summarise(n_distinct_characters_imdb = n_distinct(character_cast))
+
+char_appearances_episode_imdb %>%
+  ggplot(aes(x = (season_episode), y = n_distinct_characters_imdb, group = factor(1))) +
+  geom_point() +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+  geom_smooth()
+  
+
+```
+
+** Labels x scale for the plot**
+Create labels for x in graphs that plot all episodes. 
+```{r}
+
+labels_x_scale <- char_appearances_episode_imdb %$%
+  season_episode %>% unique %>% str_subset(pattern = "^s\\d{2}e\\d{2}$")
+
+names_labels_x_scale <- labels_x_scale %>% 
+  str_extract(pattern = "^s\\d{2}e01$") 
+
+names_labels_x_scale <- if_else(!is.na(names_labels_x_scale),
+                                true = names_labels_x_scale,
+                                false = "")
+
+names(labels_x_scale) <- names_labels_x_scale
+
+```
+
+
+```{r}
+
+p_01 <- char_appearances_episode_imdb %>%
+  left_join(char_appearances_episode_script) %>%
+  rename(imdb = n_distinct_characters_imdb,
+         scripts = n) %>%
+  gather(key = "Source", value = "n", -season_episode) %>%
+  ggplot(aes(x = (season_episode), y = n, group = Source, col = Source)) +
+  geom_point() +
+  theme_dark() +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+  geom_smooth(se = F) +
+  scale_color_manual(values = col_vector) +
+  labs(title = "Figure 2: Number of characters that participated in each episode",
+       x = "Episode",
+       y =  "Number of characters",
+       colour = "Data source") +
+    scale_x_discrete(labels = labels_x_scale %>% names)
+
+output_list[["graph_character_appearances_episode"]] <- p_01
+
+p_01
+  
+```
+
+
+rm(char_appearances_episode_script, char_appearances_episode_imdb)
+
+### By season
+**Number of characters with transcript appearances in each season**
+The last (7th) season has many less characters. It's also shorter and we have 1 episode missing.
+```{r}
+
+char_counts_season_script <- char_counts_by_non_missing_episode_long %>%
+  filter(appearances > 0) %>%
+  group_by(season_rec) %>%
+  summarise(number_characters_season = n_distinct(character.names.wikipedia))
+  
+char_counts_season_script
+
+```
+
+**Check in IMDB data**
+```{r}
+
+char_counts_season_imdb <- all_seasons_cast_imdb_df %>%
+  group_by(season) %>%
+  summarise(n_distinct_characters_imdb = n_distinct(character_cast)) %>%
+  mutate(season = if_else(as.numeric(season) < 10,
+                          true = str_c("s0", season),
+                          false = str_c("s", season)))
+
+char_counts_season_imdb
+
+```
+
+Create table to export
+```{r}
+
+t01 <- char_counts_season_imdb %>%
+  left_join(char_counts_season_script, by = c("season" = "season_rec")) %>%
+  rename(`distinct characters imdb` = n_distinct_characters_imdb,
+         `distinct characters scripts` = number_characters_season)
+
+output_list[["table_characters_season"]] <- t01
+
+t01
+
+```
+
+rm(char_counts_season_script, char_counts_season_imdb, t01)
+
+## Number of appearances
+
+### By episode
+
+**Boxplot of characters and their number of appearances by episode**
+It's difficult to see any data here. There's too much information in this graph. Maybe it's worth it to check once aggregated by season (merge season 2 to 4).
+
+Each point represents a character and the y axis shows the number of times they participated in a given script.
+```{r}
+
+p_02 <- char_counts_by_non_missing_episode_long %>%
+  filter(appearances > 0, !is.na(appearances)) %>%
+  ggplot(aes(x = season_episode, y = appearances, group = 
+character.names.wikipedia)) +
+  geom_jitter(height = 0) +
+  geom_boxplot(alpha = 0.2, outlier.shape = NA) +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) 
+
+ggplotly(p_02)
+
+```
+
+```{r}
+
+rm(p_02)
+
+```
+
+**Number of appearances by episode**
+```{r}
+
+char_counts_by_non_missing_episode_long %>%
+  group_by(season_episode) %>%
+  summarise(sum_appearances_episode = sum(appearances, na.rm = T))
+
+```
+
+Is there some kind of 'seasonality' with lower appearances in last episodes of each season?
+Large battles: http://www.vulture.com/article/game-of-thrones-battles-ranked.html
+* s01e09
+* s02e09
+* s04e09
+* s05e08
+* s05e09
+* s06e09
+* s07e02
+* s07e04
+* s07e06
+
+The total number of appearances doesn't seem to be much lower in last seasons. 
+```{r}
+
+sum_apperances_episode <- char_counts_by_non_missing_episode_long %>%
+  group_by(season_episode) %>%
+  summarise(sum_appearances_episode = sum(appearances, na.rm = T)) 
+
+sum_apperances_episode %>%
+  mutate(season_episode = factor(season_episode)) %>%
+  ggplot(aes(x = season_episode, y = sum_appearances_episode, group = 1))+
+  geom_point()+
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+  geom_line()+
+  geom_smooth()
+
+
+
+```
+
+**Standard deviation of appearances in each episode**
+```{r}
+
+char_counts_by_non_missing_episode_long %>%
+  filter(appearances > 0) %>%
+  group_by(season_episode) %>%
+  summarise(sd_appearances = sd(appearances, na.rm = T)) %>%
+  ggplot(aes(x= season_episode, y = sd_appearances, group = 1))+
+  geom_point()+
+  geom_line()+
+  geom_smooth()+
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))
+
+```
+
+
+**Mean and median appearances/character in each episode**
+```{r}
+
+char_counts_by_non_missing_episode_long %>%
+  filter(appearances > 0) %>%
+  group_by(season_episode) %>%
+  summarise(mean_appearances = round(mean(appearances, na.rm = T), 1),
+            median_appearances = median(appearances, na.rm = T))
+
+```
+
+```{r}
+
+sum_apperances_episode
+
+desc_appearances_episode <- char_counts_by_non_missing_episode_long %>%
+  filter(appearances > 0) %>%
+  group_by(season_episode) %>%
+  summarise(mean_appearances = round(mean(appearances, na.rm = T), 1),
+            median_appearances = median(appearances, na.rm = T))
+
+desc_appearances_episode %>%
+  left_join(sum_apperances_episode) %>%
+  mutate(sum_appearances_episode = sum_appearances_episode/20) %>%
+  gather(key = "indicator", value = "value", -season_episode) %>%
+  ggplot(aes(x = season_episode, y = value, group = indicator, col = indicator)) +
+  geom_point()+
+  geom_line()+
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+  scale_y_continuous(sec.axis = sec_axis(~.*20)) +
+  geom_smooth()
+
+rm(desc_appearances_episode, p)
+
+```
+
+**Number of characters with low number of appearances by episode**
+This would be a good measure of use of secondary characters. How can I measure this? Check first quintile. Check also number of characters with less than 5, 10 and 20 lines. 
+```{r}
+
+char_counts_by_non_missing_episode_long %>%
+  filter(appearances > 0) %>%
+  mutate(less_5_appearances = if_else(appearances < 5, 1, 0),
+         less_10_appearances = if_else(appearances < 10, 1, 0)) %>%
+  group_by(season_episode) %>%
+  summarise(sum_less_5_appearances = sum(less_5_appearances, na.rm = T),
+            sum_less_10_appearances = sum(less_10_appearances, na.rm = T) ) %>%
+  gather(key = "var", value = "value", -season_episode) %>%
+  ggplot(aes(x = season_episode, y = value, group = var, col = var))+
+  geom_point() +
+  geom_line()+
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+  geom_smooth()
+  
+```
+
+**Number of characters with high number of appearances by episode**
+```{r}
+char_counts_by_non_missing_episode_long %>%
+  filter(appearances > 0) %>%
+  mutate(`10_or_more_appearances` = if_else(appearances >= 10, 1, 0),
+         `15_or_more_appearances` = if_else(appearances >= 15, 1, 0),
+         `20_or_more_appearances` = if_else(appearances >= 20, 1, 0),
+         `25_or_more_appearances` = if_else(appearances >= 25, 1, 0)) %>%
+  group_by(season_episode) %>%
+  summarise(sum_10_or_more_appearances = sum(`10_or_more_appearances`, na.rm = T),
+            sum_15_or_more_appearances = sum(`15_or_more_appearances`, na.rm = T),
+            sum_20_or_more_appearances = sum(`20_or_more_appearances`, na.rm = T),
+            sum_25_or_more_appearances = sum(`25_or_more_appearances`, na.rm = T)) %>%
+  gather(key = "indicator", value = "value", -season_episode) %>%
+  ggplot(aes(x = season_episode, y = value, group = indicator, col = indicator))+
+  geom_point() +
+  geom_line()+
+  geom_smooth()+
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) 
+```
+
+**Categorise number of appearances**
+```{r}
+
+char_counts_by_non_missing_episode_long %>%
+  mutate(appearances_cat = cut(appearances, breaks = c(seq(0,30,5),76))) %>%
+  filter(!is.na(appearances_cat)) %>%
+  count(season_episode, appearances_cat) %>%
+  ggplot(aes(x = season_episode, y = n, group = appearances_cat, col = appearances_cat)) +
+  geom_point() +
+  geom_line() +
+  geom_smooth()+
+  coord_cartesian(ylim=c(0, 20))+
+  #scale_y_continuous(limits = c(1, 20)) +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) 
+  
+```
+
+
+
+### By season
+
+#### In absolute numbers
+**Boxplot by season**
+It's still difficult to see anything
+```{r}
+
+char_counts_by_non_missing_episode_long %>%
+  mutate(season_rec = season_episode %>% str_extract(pattern = "^s\\d{2}") %>%
+           if_else(. %in% c("s02", "s03", "s04"), "s02-s04",. ) ) %>%
+  group_by(character.names.wikipedia, season_rec) %>%
+  summarise(appearances_season = sum(appearances, na.rm = T)) %>%
+  filter(appearances_season > 0) %>%
+   ggplot(aes(x = factor(1), y = appearances_season)) +
+  geom_jitter(height = 0) +
+  geom_boxplot(alpha = 0.2, outlier.shape = NA) +
+  #geom_violin(alpha = 0.2)+
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))+
+  facet_wrap(~season_rec) +
+  scale_y_continuous(limits = c(0,200))
+  
+```
+
+**Number of appearances by season and average over observed episodes**
+The total number of appearances in each episode doesn't seem to change in the 7th season. Yet, main characters seem to have a much larger role. 
+```{r}
+
+n_observed_eps <- char_counts_by_non_missing_episode_long %>%
+  group_by(season_rec) %>%
+  summarise(observed_ep = n_distinct(season_episode))
+
+desc_appearances_season <- char_counts_by_non_missing_episode_long %>%
+  filter(appearances > 0) %>%
+  group_by(season_rec) %>%
+  summarise(sum_appearances_season = sum(appearances),
+            mean_appearances = round(mean(appearances)),
+            median_appearances = median(appearances),
+            sd_appearances = sd(appearances)) %>%
+  left_join(n_observed_eps) %>%
+  mutate(sum_app_by_obs_ep = round(sum_appearances_season/observed_ep,0))
+
+desc_appearances_season
+
+
+
+```
+
+
+**Appearances of top 5 and 10 characters in each season**
+I should compute the proportion of appearances of top 5 and top 10, not the absolute number. Else, it's a matter of which season had more appearances.
+```{r}
+
+char_counts_by_non_missing_episode_long %>%
+  group_by(character.names.wikipedia, season_rec) %>%
+  summarise(sum_appearances = sum(appearances)) %>%
+  group_by(season_rec) %>%
+  mutate(rank = dense_rank(desc(sum_appearances))) %>%
+  filter(rank <= 5) %>%
+  arrange(season_rec) %>% 
+  left_join(desc_appearances_season %>% select(season_rec, sum_appearances_season)) %>%
+  mutate(prop_appearances_top_5 = sum_appearances/sum_appearances_season) %>%
+  ggplot(aes(x = season_rec, y = prop_appearances_top_5)) +
+  geom_jitter(width = 0.3) +
+  geom_boxplot(alpha = 0.5)
+
+
+char_counts_by_non_missing_episode_long %>%
+  group_by(character.names.wikipedia, season_rec) %>%
+  summarise(sum_appearances = sum(appearances)) %>%
+  group_by(season_rec) %>%
+  mutate(rank = dense_rank(desc(sum_appearances))) %>%
+  filter(rank <= 10) %>%
+  arrange(season_rec) %>% 
+  left_join(desc_appearances_season %>% select(season_rec, sum_appearances_season)) %>%
+  mutate(prop_appearances_top_5 = sum_appearances/sum_appearances_season) %>%
+  ggplot(aes(x = season_rec, y = prop_appearances_top_5)) +
+  geom_jitter(width = 0.3) +
+  geom_boxplot(alpha = 0.5)
+
+```
+
+There is a very clear pattern. Is this the same  for screen times from IMDB user?
+```{r}
+
+char_counts_by_non_missing_episode_long %>%
+  group_by(character.names.wikipedia, season_rec) %>%
+  summarise(sum_appearances_char = sum(appearances)) %>%
+  left_join(desc_appearances_season %>% select(season_rec, sum_appearances_season)) %>%
+  mutate(prop_appearances_season = sum_appearances_char/sum_appearances_season) %>%
+  group_by(season_rec) %>%
+  mutate(rank = dense_rank(desc(prop_appearances_season))) %>%
+  filter(rank <= 5) %>%
+  summarise(prop_top = sum(prop_appearances_season))
+
+char_counts_by_non_missing_episode_long %>%
+  group_by(character.names.wikipedia, season_rec) %>%
+  summarise(sum_appearances_char = sum(appearances)) %>%
+  left_join(desc_appearances_season %>% select(season_rec, sum_appearances_season)) %>%
+  mutate(prop_appearances_season = sum_appearances_char/sum_appearances_season) %>%
+  group_by(season_rec) %>%
+  mutate(rank = dense_rank(desc(prop_appearances_season))) %>%
+  filter(rank <= 10) %>%
+  summarise(prop_top = sum(prop_appearances_season))
+
+  
+```
+
+Create a loop
+```{r}
+
+top_proportions_list <- list()
+
+for(top_number in c(seq(5,30,1))){
+
+top_proportions_list[[str_c("top_", top_number)]] <- char_counts_by_non_missing_episode_long %>%
+  group_by(character.names.wikipedia, season_rec) %>%
+  summarise(sum_appearances_char = sum(appearances)) %>%
+  left_join(desc_appearances_season %>% select(season_rec, sum_appearances_season),
+            by = "season_rec") %>%
+  mutate(prop_appearances_season = sum_appearances_char/sum_appearances_season) %>%
+  group_by(season_rec) %>%
+  mutate(rank = rank(desc(prop_appearances_season), ties.method = "first")) %>%
+  filter(rank <= top_number) %>%
+  summarise(prop_top = sum(prop_appearances_season)) %>%
+    mutate(number_top_characters = top_number) 
+}
+
+top_proportions_df <- top_proportions_list %>%
+  bind_rows
+
+rm(top_number, top_proportions_list, desc_appearances_season)
+
+top_proportions_df
+  
+```
+
+This graph is very clear. I'll make it tidy and ready to export. 
+```{r}
+
+graph_prop_most_important_characters_season <- top_proportions_df %>%
+  ggplot(aes(x = number_top_characters, y = prop_top, group = season_rec, col = season_rec)) +
+  geom_point()+
+  geom_line() +
+  scale_y_continuous(labels = scales::percent)+
+  theme_dark() +
+  scale_color_manual(values = col_vector) +
+  labs(title = "Figure 4: Cumulative proportion of participations of top characters in each season",
+       x = "Number of most important characters",
+       y =  "% script appearances",
+       colour = "Season") +
+  scale_x_continuous(breaks = seq(5 , 30, 5))
+  
+
+output_list[["graph_prop_most_important_characters_season"]] <- graph_prop_most_important_characters_season
+
+graph_prop_most_important_characters_season
+
+```
+
+**Compare the ratio of participations of top characters between s07 and s01**
+```{r}
+
+top_proportions_df_long <- top_proportions_df %>%
+  spread(key = "season_rec", value = "prop_top")
+  
+top_proportions_df_long %>%
+  select(`s01`:s06) %>%
+  map_df(function(x){top_proportions_df_long$s07/x })
+
+rm(top_proportions_df, top_proportions_df_long, graph_prop_most_important_characters_season)
+
+```
+
+
+**Number number of characters that average <=5, <=10, >= 15, >= 20 in each season** 
+
+```{r}
+
+char_mean_appearances_season <- char_counts_by_non_missing_episode_long %>%
+  group_by(season_rec, character.names.wikipedia) %>%
+  summarise(sum_appearances_char_season = sum(appearances)) %>%
+  left_join(n_observed_eps, by = "season_rec") %>%
+  mutate(mean_appearances_char_season = sum_appearances_char_season/observed_ep)
+
+char_mean_appearances_season %>%
+  filter(sum_appearances_char_season != 0) %>%
+  mutate(mean_appearances_char_season_cat = cut(mean_appearances_char_season, 
+                                                c(seq(0,7,1),35))) %>%
+  count(season_rec, mean_appearances_char_season_cat) %>%
+  ggplot(aes(x = season_rec, y = n, group = mean_appearances_char_season_cat, col = mean_appearances_char_season_cat)) +
+  geom_line()+
+  geom_point()
+  
+```
+
+```{r}
+
+char_mean_appearances_season_cat <- char_mean_appearances_season %>%
+  filter(sum_appearances_char_season != 0) %>%
+  mutate(mean_appearances_char_season_cat = cut(mean_appearances_char_season, 
+                                                c(0,3,6,15,50), 
+                                                labels = c("less than 3",
+                                                           "3 to 6",
+                                                           "6 to 15",
+                                                           "more than 15"))) %>%
+  count(season_rec, mean_appearances_char_season_cat) 
+
+char_mean_appearances_season_cat %>%
+  spread(key = mean_appearances_char_season_cat, value = n)
+
+```
+
+```{r}
+p_03 <- char_mean_appearances_season_cat %>%
+  ggplot(aes(x = season_rec, y = n, group = mean_appearances_char_season_cat, col = mean_appearances_char_season_cat)) +
+  geom_line() +
+  geom_point() +
+  theme_dark() +
+        scale_color_manual(values = col_vector) +
+  labs(title = "Figure 3: Characters classified by mean appearances per episode",
+       x = "Season",
+       y =  "Number of characters",
+       colour = "Mean script appearances by season")
+
+output_list[["graph_number_char_mean_appearances_categories_season"]] <- p_03 
+
+p_03
+
+rm(p_03)
+
+```
+
+```{r}
+```
+
+#### In proportions
+
+**Boxplot of mean appearances per episode in each season**
+```{r}
+
+char_mean_appearances_season %>%
+  filter(sum_appearances_char_season != 0) %>%
+    ggplot(aes(y = mean_appearances_char_season, x = season_rec)) +
+  geom_jitter() +
+  geom_boxplot(alpha = .3)
+
+```
+
+**Percentiles of mean appearances per episode in each season**
+```{r}
+
+# calculate percentiles of mean appearances/episode in each season using a map loop
+
+percentiles_mean_appearances_episode_by_season_list <- map(seq(0.01,1,0.01), function(x){
+
+char_mean_appearances_season %>%
+  filter(sum_appearances_char_season != 0) %>%
+  select(season_rec, mean_appearances_char_season) %>%
+  group_by(season_rec) %>%
+  summarise(percentile = quantile(mean_appearances_char_season, probs = x)) %$%
+    percentile
+  
+}) 
+
+# convert the list into a matrix, then data_frame and give it names
+percentiles_mean_appearances_episode_by_season_df <- percentiles_mean_appearances_episode_by_season_list %>%
+  unlist %>%
+  matrix(ncol = length(char_mean_appearances_season$season_rec %>% unique), nrow = 100, byrow = T) %>%
+  as_data_frame
+
+names(percentiles_mean_appearances_episode_by_season_df) <- unique(char_mean_appearances_season$season_rec)
+  
+rm(percentiles_mean_appearances_episode_by_season_list)  
+
+# add a first row with percentiles
+
+percentiles_mean_appearances_episode_by_season_df %<>% 
+  bind_cols(percentile = as.character(seq(0.01,1,0.01)), .)
+
+percentiles_mean_appearances_episode_by_season_df %>%
+  head()
+
+```
+
+This is an extremely nice graph but might be a bit difficult to interpret by many readers.
+```{r}
+
+g <- percentiles_mean_appearances_episode_by_season_df %>%
+  mutate(filter_value = rep(1:5,20)) %>%
+  filter(filter_value == 5) %>% 
+  select(-filter_value) %>%
+  gather(key = "season", value = "mean_appearances_episode", -percentile) %>%
+  ggplot(aes(x = percentile, y = mean_appearances_episode, group = season, colour = season)) +
+  geom_point() +
+  geom_line() +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))
+  
+ggplotly(g)
+
+```
+
+```{r}
+
+rm(g)
+
+```
+
+TO DO: Two further ideas: 
+  * Convert graph above into a lorenz curve by showing y axis as proportion as well. <- does this show the indicator I want to show? If the number of appearances was to change, then the proportion of appearances in each percentile doesn't represent total appearances.
+  * Do the chunk below and percentage of characters in categories. Should be similar to the graph in 'Number number of characters that average <=1 <=2 <=5, <=10, >= 15, >= 20 in each season' but with a better y axis. 
+
+**Proportion of characters that average <3, between 3 and 6, between 6 and 15, more than 16** 
+```{r}
+
+sum_char_season <- char_mean_appearances_season_cat %>%
+  group_by(season_rec) %>%
+  summarise(n_season = sum(n))
+
+prop_char_mean_appearances_season_cat <- char_mean_appearances_season_cat %>%
+  left_join(sum_char_season, by = "season_rec") %>%
+  mutate(prop = n/n_season) 
+
+prop_char_mean_appearances_season_cat %>%
+  select(season_rec, mean_appearances_char_season_cat, prop) %>%
+  spread(key = mean_appearances_char_season_cat, value = prop)
+
+```
+
+```{r}
+
+prop_char_mean_appearances_season_cat %>%
+  ggplot(aes(x = season_rec, y = prop, group = mean_appearances_char_season_cat, col = mean_appearances_char_season_cat)) +
+  geom_line() +
+  geom_point() +
+  theme_dark() +
+        scale_color_manual(values = col_vector) +
+  labs(title = "Mean script appearances by season ",
+       x = "Season",
+       y =  "Proportion of characters",
+       colour = "Mean appearances by episode")
+
+```
+
+
+```{r}
+
+rm(char_mean_appearances_season_cat, sum_char_season, 
+   prop_char_mean_appearances_season_cat, percentiles_mean_appearances_episode_by_season_df)
+
+```
+
+
+## Re-samples of episodes
+
+Ok. So we see that there are some patterns with 7th season having less number of characters appearing and more concentration of appearances in fewer characters. Would this have happened to other seasons if they were of only 6 episodes? I choose 6 because it's the number of observed episodes in the 7th season.
+Re-sample with replacement.
+
+
+### Compute re-sample episodes with replacement
+```{r}
+
+ #sample episodes from seasons 1, 5 and 6
+
+if(!file.exists("interim_output/resampled_episodes_16.rds")){
+
+sampled_episodes_in_season_list <- list()
+
+seasons_resample <- unique(char_counts_by_non_missing_episode_long$season_rec)[-2] 
+
+    for(season in seasons_resample) {
+
+    for(i in 1:6000){ #number of resamples
+    
+  sampled_episodes_in_season_list[[season]][[i]] <-   
+      char_counts_by_non_missing_episode_long[char_counts_by_non_missing_episode_long$season_rec == season,"season_episode"] %>%
+    dplyr::sample_n(6) %$% season_episode
+    
+    }
+  
+    } 
+
+sampled_episodes_in_season_list %>% 
+  write_rds("interim_output/resampled_episodes_16.rds")
+
+rm(seasons_resample, season, i)
+
+}else{
+  
+  sampled_episodes_in_season_list <- read_rds("interim_output/resampled_episodes_16.rds")
+}
+
+```
+
+Re-sample characters with replacement within re-sampled episodes
+```{r}
+
+if(!file.exists("interim_output/resampled_char_in_season_list_16.rds")){
+  
+    # compute sum of appearances that appeared in each episode
+sum_apperances_episode_resampling <- sum_apperances_episode %>%
+  filter(season_episode %>% str_extract(pattern = "^s\\d{2}") %in% names(sampled_episodes_in_season_list)) 
+
+    # here starts the loop!
+
+resampled_char_in_season_list <- sampled_episodes_in_season_list %>% #actual season (first level)
+  map(function(season) {
+    
+    season %>% # 5000 resampled seasons in each actual season (second level) 
+  
+  map(function(y) {y %>%
+  
+      map(
+    
+    function(x){
+      
+      num_app_resample <- sum_apperances_episode_resampling %>%
+        filter(season_episode == x) %$% sum_appearances_episode
+      
+      char_counts_by_non_missing_episode_long %>%
+        filter(appearances != 0, season_episode == x) %>%
+        select(identifier, appearances) %>%
+        uncount(appearances) %>%
+        dplyr::sample_n(num_app_resample, replace = T) %>%
+        group_by(identifier) %>%
+        summarise(appearances = n())
+        
+      }
+  
+  ) 
+    }
+  
+  )
+    
+  }
+
+)
+
+resampled_char_in_season_list %>%
+  write_rds("interim_output/resampled_char_in_season_list_16.rds")
+
+}else{
+  
+  resampled_char_in_season_list <- 
+  read_rds("interim_output/resampled_char_in_season_list_16.rds")
+  
+}
+
+```
+
+Count total number of appearances by character in each simulated season
+```{r}
+
+resampled_sum_appearances_by_char_in_season_list <- resampled_char_in_season_list %>% map(function(y){ y %>%
+  map(function(x){
+    
+    x %>%
+      bind_rows %>%
+      group_by(identifier) %>%
+      summarise(sum_appearances_char_season = sum(appearances))
+    
+  })
+  
+})
+
+resampled_sum_appearances_by_char_in_season_df <- resampled_sum_appearances_by_char_in_season_list %>%
+  map(function(x){x %>%
+      bind_rows(.id = "simulation")}) %>%
+  bind_rows(.id = "season") %>%
+  mutate(simulation = as.double(simulation))
+
+```
+
+Calculate total appearances in each simulation and the average number of appearances per episode
+```{r}
+
+resampled_total_appearances_simulated_season <- resampled_sum_appearances_by_char_in_season_df %>%
+  group_by(season, simulation) %>%
+  summarise(sum_total_appearances_simulation = sum(sum_appearances_char_season),
+            mean_appearances_by_episode_simulation = sum_total_appearances_simulation/7)
+
+resampled_total_appearances_simulated_season
+
+```
+
+### Appearances by season from re-samples
+
+**Compute estimates of mean appearances by season from aggregated simulations **
+There aren't less dialogues in season 7, as in previously found. 
+```{r}
+
+resample_total_appearances_aggregated_estimates <- resampled_total_appearances_simulated_season %>%
+  group_by(season) %>%
+  summarise(q_05 = quantile(mean_appearances_by_episode_simulation, probs = 0.05),
+            median = quantile(mean_appearances_by_episode_simulation, probs = 0.5),
+            q_95 = quantile(mean_appearances_by_episode_simulation, probs = 0.95))
+
+resample_total_appearances_aggregated_estimates
+
+```
+
+```{r}
+
+resample_total_appearances_aggregated_estimates %>%
+  ggplot(aes(x=season, y=median)) + 
+    geom_errorbar(aes(ymin=q_05, ymax=q_95), width=.1) +
+    geom_point()
+
+```
+
+**Compute estimates of number of characters appeared by season from aggregated simulations **
+There seem to be less characters, even when other seasons are 'cut' to 7 episodes. In (real) 7th season there are  47.
+```{r}
+
+resampled_n_char_appear_in_season <- resampled_sum_appearances_by_char_in_season_df %>%
+  group_by(season, simulation) %>%
+  summarise(char_appear_simulated_season = n_distinct(identifier))
+
+resampled_n_char_appear_in_season
+
+```
+
+```{r}
+
+resampled_n_char_appear_aggregated_estimates <- resampled_n_char_appear_in_season %>%
+  group_by(season) %>%
+  summarise(q_05 = quantile(char_appear_simulated_season, probs = 0.05),
+            median = quantile(char_appear_simulated_season, probs = 0.5),
+            q_95 = quantile(char_appear_simulated_season, probs = 0.95))
+
+resampled_n_char_appear_aggregated_estimates
+
+```
+
+```{r}
+
+p_3 <- resampled_n_char_appear_aggregated_estimates %>%
+  rename(appearnces = median) %>%
+  ggplot(aes(x=season, y=appearnces)) + 
+    geom_errorbar(aes(ymin=q_05, ymax=q_95), width=.3, size = 1.2) +
+    geom_point(size = 2) +
+  theme_dark() +
+  labs(title = "Figure 5: Number of characters participating in each season (simulated)",
+       y = "Number of characters",
+       x = "Season",
+       caption = "Note: Point shows the median number of the number of characters in simulations. \n Whiskers represent the 2.5 and 97.5 percentiles of the numbero of characters")
+
+output_list[["graph_resample_total_appearances_season"]] <- p_3
+
+p_3
+
+rm(p_3)
+
+```
+
+### Test differences in re-sampled samples between season 7 and other seasons
+```{r}
+
+resampled_n_char_appear_diff_between_seasons <- resampled_n_char_appear_in_season %>%
+  spread(key = "season", value = "char_appear_simulated_season") %>%
+  mutate(diff_s07_s01 = s07 - s01,
+         diff_s07_s05 = s07 - s05,
+         diff_s07_s06 = s07 - s06)
+
+resampled_n_char_appear_diff_between_seasons
+
+```
+
+```{r}
+
+resampled_n_char_appear_diff_between_seasons %>%
+  select(simulation, starts_with("diff_")) %>%
+  gather(key = "diff_seasons", value = "difference_char_appearances", -simulation) %>%
+  group_by(diff_seasons) %>%
+  summarise(q_025 = quantile(difference_char_appearances, 0.025),
+            q_05 = quantile(difference_char_appearances, 0.05),
+            median = quantile(difference_char_appearances, 0.5),
+            q_95 = quantile(difference_char_appearances, 0.95),
+            q_975 = quantile(difference_char_appearances, 0.975))
+
+```
+
+**Compute estimates of number of proportion of appearances of top 5 and 10**
+```{r}
+
+resampled_ranked_sum_appearances_by_char_in_season_df <- resampled_sum_appearances_by_char_in_season_df %>%
+  left_join(resampled_total_appearances_simulated_season %>% 
+              select(season, simulation, sum_total_appearances_simulation),
+            by = c("season", "simulation")) %>%
+  group_by(season, simulation) %>%
+  mutate(prop_appearances_season = sum_appearances_char_season/sum_total_appearances_simulation,
+         rank = rank(desc(prop_appearances_season), ties.method = "first"))
+
+resampled_ranked_sum_appearances_by_char_in_season_df
+
+```
+
+Proportion of appearances top 5
+```{r}
+
+resampled_ranked_sum_appearances_by_char_in_season_df %>%
+  filter(rank <=5 ) %>%
+  group_by(season, simulation) %>%
+  summarise(appearances_top_5 = sum(prop_appearances_season)) %>%
+  group_by(season) %>%
+  summarise(q_05 = quantile(appearances_top_5, probs = 0.05),
+            median = quantile(appearances_top_5, probs = 0.5),
+            q_95 = quantile(appearances_top_5, probs = 0.95))
+
+```
+
+Proportion of appearances top 10
+```{r}
+
+resampled_ranked_sum_appearances_by_char_in_season_df %>%
+  filter(rank <= 10 ) %>%
+  group_by(season, simulation) %>%
+  summarise(appearances_top_10 = sum(prop_appearances_season)) %>%
+  group_by(season) %>%
+  summarise(q_05 = quantile(appearances_top_10, probs = 0.05),
+            median = quantile(appearances_top_10, probs = 0.5),
+            q_95 = quantile(appearances_top_10, probs = 0.95))
+
+```
+
+**Compute estimates of number of proportion of appearances from top 5 to top 10**
+```{r}
+
+top_resample_proportions_list <- list()
+
+for(top_number in c(seq(5,30,1))){
+  
+top_resample_proportions_list[[str_c("top_", top_number)]] <- resampled_ranked_sum_appearances_by_char_in_season_df %>%
+  filter(rank <= top_number) %>%
+  group_by(season, simulation) %>%
+  summarise(prop_top = sum(prop_appearances_season)) %>%
+  mutate(number_top_characters = top_number) 
+
+}
+  
+top_resample_proportions_df <- top_resample_proportions_list %>%
+  bind_rows
+
+rm(top_resample_proportions_list)
+
+top_resample_proportions_df
+
+```
+
+Compute aggregates from simulations for median, q025 and q975
+```{r}
+
+top_resample_aggregate_quantile_proportions_df <- top_resample_proportions_df %>%
+  group_by(season, number_top_characters) %>%
+  summarise(q_05 = quantile(prop_top, probs = 0.05),
+            median = quantile(prop_top, probs = 0.5),
+            q_95 = quantile(prop_top, probs = 0.95))
+
+top_resample_aggregate_quantile_proportions_df  
+
+```
+
+```{r}
+
+p_05 <- top_resample_aggregate_quantile_proportions_df %>%
+  ungroup %>%
+  mutate(season = factor(recode(season, s01 = "Season 1",
+                             s05 = "Season 5",
+                             s06 = "Season 6",
+                             s07 = "Season 7"))) %>%
+  ggplot(aes(x = number_top_characters, y = median, group = season))+
+  geom_point()+
+  geom_line(aes(colour = season), size = 1.2)+ 
+  #geom_errorbar(aes(ymin=q_05, ymax=q_95), width=.2) +
+  theme_dark()+
+  scale_color_manual(values = col_vector) +
+  scale_y_continuous(labels = scales::percent)+
+  labs(title = "Figure 6: Proportion of script appearances of most important characters in each season",
+       x = "Number of top characters",
+       y =  "% of appearances in scripts",
+       colour = "Season") +
+    scale_x_continuous(breaks = seq(5 , 30, 5)) +
+  geom_ribbon(aes(ymin=q_05, ymax=q_95, fill = season, colour = season), alpha = 0.1)
+
+output_list[["graph_resample_prop_most_important_characters_season"]] <- p_05
+
+p_05
+
+rm(p_05)
+
+```
+
+
+
+
+Remove objects from resampling
+```{r}
+
+rm(resampled_sum_appearances_by_char_in_season_list,
+   resampled_sum_appearances_by_char_in_season_df,
+   sampled_episodes_in_season_list,
+   resampled_total_appearances_simulated_season,
+  resample_total_appearances_aggregated_estimates,
+    resampled_n_char_appear_in_season,
+  sum_apperances_episode_resampling,
+  resampled_char_in_season_list,
+  resampled_n_char_appear_aggregated_estimates,
+  resampled_n_char_appear_diff_between_seasons,
+  resampled_ranked_sum_appearances_by_char_in_season_df,
+  top_resample_proportions_list,
+  top_resample_proportions_df,
+  top_resample_aggregate_quantile_proportions_df)
+
+```
+
+# Compare first and last part of season
+
+I will only check season 1, 5, 6 and 7. We have (almost) all episodes for these 4 seasons. First 7 episodes of season 1, 5 and 6 will be treated as 'first part'. For season 7 (shorter, with only 7 episodes), first 4 episodes will be treated as first part. 
+```{r}
+
+season_part_df <- char_counts_by_non_missing_episode_long %>%
+  filter(!season_rec %in% "s02-s04") %>% #fiter out seasons 2 to 4
+  count(season_rec, season_episode) %>%
+  group_by(season_rec) %>%
+  mutate(episode_number_within_season = row_number(season_episode),
+         first_part_season = if_else(season_rec != "s07" & episode_number_within_season < 8,
+                                     true = 1, 
+                                     false = if_else(season_rec == "s07" & episode_number_within_season < 5, 
+                                                     true = 1,
+                                                     false = 0))) %>%
+  ungroup %>%
+  select(season_rec, season_episode, first_part_season)
+
+sum_episodes_observed_part_season <- season_part_df %>%
+  count(season_rec, first_part_season) %>%
+  rename(part_season_episodes = n)
+  
+
+```
+
+Difficult to see anything from this table. Distributions seem a bit more skewed in final part of the season but it's not so obvious.
+```{r}
+
+desc_appearances_part_season <- char_counts_by_non_missing_episode_long %>%
+  filter(appearances > 0 & season_rec != "s02-s04") %>%
+  left_join(season_part_df %>% select(-season_rec), by = "season_episode") %>% 
+  group_by(season_rec, first_part_season) %>%
+  summarise(sum_appearances = sum(appearances),
+            mean_appearances = round(mean(appearances)),
+            median_appearances = median(appearances),
+            sd_appearances = sd(appearances))
+ 
+  #merge with number of episodes in each part to compute average number of script appearances by episode
+desc_appearances_part_season %<>%
+  left_join(sum_episodes_observed_part_season) %>%
+  mutate(mean_appearances_episode = sum_appearances/part_season_episodes)
+
+
+desc_appearances_part_season
+  
+  # to do: check this. check last computed mean.
+
+```
+
+**Proportion of appearances of top characters by part of season**
+Looking at the 10 top characters there seems to be a difference between the first and second part of the season. This doesn't happen, however for season 1.
+```{r}
+
+ranked_char_part_season_df <- char_counts_by_non_missing_episode_long %>%
+  filter(appearances > 0 & season_rec != "s02-s04") %>%
+  left_join(season_part_df %>% select(-season_rec), by = "season_episode") %>%
+  group_by(character.names.wikipedia, season_rec, first_part_season) %>%
+  summarise(sum_appearances_char = sum(appearances)) %>%
+  left_join(desc_appearances_part_season %>% select(season_rec, 
+                                                    first_part_season, 
+                                                    sum_appearances), 
+            by = c("season_rec", "first_part_season") ) %>%
+  mutate(prop_appearances_season = sum_appearances_char/sum_appearances) %>%
+  group_by(season_rec, first_part_season) %>%
+  mutate(rank = rank(desc(prop_appearances_season), ties.method = "first")) 
+
+ranked_char_part_season_df %>%
+  filter(rank <= 5) %>%
+  summarise(prop_top = sum(prop_appearances_season)) %>%
+  arrange(season_rec, desc(first_part_season))
+
+ranked_char_part_season_df %>%
+  filter(rank <= 10) %>%
+  summarise(prop_top = sum(prop_appearances_season)) %>%
+  arrange(season_rec, desc(first_part_season))
+
+
+
+```
+
+```{r}
+
+top_proportions_by_season_part_list <- list()
+
+for(top_number in c(seq(5,50,1))){
+
+top_proportions_by_season_part_list[[str_c("top_", top_number)]] <- ranked_char_part_season_df %>%
+  filter(rank <= top_number) %>%
+  summarise(prop_top = sum(prop_appearances_season)) %>%
+    mutate(number_top_characters = top_number) 
+}
+
+top_proportions_by_season_part_list_df <- top_proportions_by_season_part_list %>%
+  bind_rows
+
+rm(ranked_char_part_season_df, top_proportions_by_season_part_list)
+
+```
+
+```{r}
+
+ top_proportions_by_season_part_list_df %<>%
+  unite(col = "season_rec_part", season_rec, first_part_season, remove = F) %>%
+  ungroup %>%
+  mutate(first_part_season = factor(if_else(first_part_season == 1, "first part", "final part")),
+         season_rec = recode(season_rec, s01 = "Season 1",
+                             s05 = "Season 5",
+                             s06 = "Season 6",
+                             s07 = "Season 7"))
+ 
+top_proportions_by_season_part_list_df %>%
+  select(season_rec_part, prop_top, number_top_characters) %>%
+  spread(key = season_rec_part, value = prop_top)
+
+```
+
+```{r}
+
+p_06 <- top_proportions_by_season_part_list_df %>%
+  ggplot(aes(x = number_top_characters, y = prop_top, group = first_part_season, 
+             col = first_part_season)) +
+  geom_point() +
+  geom_line() +
+  facet_wrap(~season_rec) +
+  theme_dark() +
+  scale_color_manual(values = col_vector) +
+  scale_y_continuous(labels = scales::percent) +
+  labs(title = "Proportion of script appearances of most important characters in each season",
+       x = "Number of top characters",
+       y =  "% of appearances in scripts",
+       colour = "Part of the season")
+
+output_list[["graph_prop_most_important_characters_season_by_part"]] <- p_06
+
+p_06
+
+rm(p_06)
+
+```
+
+```{r}
+
+rm(top_proportions_by_season_part_list_df)
+
+```
+
+**Number of appearances by episode and part of season**
+```{r}
+
+sum_apperances_episode %>%
+  mutate(season_episode = factor(season_episode)) %>%
+  right_join(season_part_df %>% select(-season_rec), by = "season_episode") %>%
+  ggplot(aes(x = season_episode, y = sum_appearances_episode, col = factor(first_part_season), group = factor(1)))+
+  geom_point()+
+  geom_line()
+
+```
+```{r}
+
+rm(sum_apperances_episode)
+
+```
+
+# When do characters first appear?
+```{r}
+
+all_seasons_cast_imdb_full_wide_df <- all_seasons_cast_imdb_df %>%
+  mutate(season = if_else(as.numeric(season) < 10,
+                          true = str_c("0", season),
+                          false = season %>% as.character),
+         episode = if_else(as.numeric(episode) < 10,
+                           true = str_c("0", episode),
+                           false = episode %>% as.character),  
+    season_episode = str_c("s",season, "e", episode),
+    appearance = 1) %>%
+  select(character_cast, season_episode, appearance) %>%
+  spread(key = season_episode, value = appearance) %>%
+  mutate_at(.vars = vars(starts_with("s")), function(x){
+    if_else(is.na(x),
+            true = 0,
+            false = x)})
+
+all_seasons_cast_imdb_full_wide_df
+
+```
+
+
+```{r}
+
+all_seasons_cast_imdb_full_long_df <- all_seasons_cast_imdb_full_wide_df %>%
+  gather(key = "season_episode", value = "appearance", -character_cast) %>%
+  mutate(season_episode = as_factor(season_episode)) 
+
+first_imdb_appearance_df <- all_seasons_cast_imdb_full_long_df %>%
+  filter(appearance == 1) %>%
+  group_by(character_cast) %>%
+  summarise(first_appearance = min(as.numeric(season_episode))) %>%
+  mutate(first_appearance_se = factor(first_appearance, levels = 1:67,
+                                   labels = unique(all_seasons_cast_imdb_full_long_df$season_episode)))
+
+first_imdb_appearance_df 
+
+```
+
+```{r}
+
+count_first_appearance_episode <- first_imdb_appearance_df %>%
+  count(first_appearance_se)
+
+count_first_appearance_episode %>%
+  ggplot(aes(x = first_appearance_se, y = n, group = factor(1))) +
+  geom_point()+
+  geom_line() +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+  geom_smooth()
+
+# plot also deaths
+
+```
+
+
+
+
+# When do characters die?
+```{r}
+
+characters_dead %<>%
+  mutate(character = toupper(character) %>% 
+           recode("GRAND PYCELLE" = "PYCELLE",
+                  "AGGO" = "AKHO"),
+         season = str_extract(season, "\\d$") %>% as.numeric,
+         season =  if_else(season < 10,
+                   true = str_c("0", season),
+                   false = season %>% as.character),
+         episode_number = if_else(as.numeric(episode_number) < 10,
+                           true = str_c("0", episode_number),
+                           false = episode_number %>% as.character),  
+    season_episode = str_c("s",season, "e", episode_number)) %>%
+  filter(!character %in% c("VISERION", "SUMMER", "SHAGGYDOG", "GREY WIND")) %>% # these characters are not humans, thus they can not be in cast
+  select(-season, -episode_number)
+
+characters_dead$character[!characters_dead$character %in% first_imdb_appearance_df$character_cast]
+
+```
+
+```{r}
+
+count_deaths_episode <- characters_dead %>%
+  count(season_episode)
+  
+count_deaths_episode %>%
+  ggplot(aes(x = factor(season_episode), y = n, group = factor(1))) +
+  geom_point() +
+  geom_line()
+  
+```
+
+Try merging graphs of alive (i.e. first appearances) and dead characters
+```{r}
+
+count_first_appearance_deaths_episode <- count_first_appearance_episode %>%
+  rename(first_appearances = n,
+         season_episode = first_appearance_se) %>%
+  full_join(count_deaths_episode, by = "season_episode") %>%
+  rename(deaths = n) %>%
+  mutate(first_appearances = if_else(is.na(first_appearances),
+                                     true = 0,
+                                     false = as.double(first_appearances)),
+         deaths = if_else(is.na(deaths),
+                          true = 0,
+                          false = as.double(deaths)),
+         survived = first_appearances - deaths,
+         alive = cumsum(survived))
+
+if(length(unique(count_first_appearance_deaths_episode$season_episode))  != nrow(episode_list_df)){
+  
+  stop("Failed test: length of episodes in object 'count_first_appearance_deaths_episode' should be equal to the total number of episodes in 'episode_list_df'.")
+  
+}
+
+count_first_appearance_deaths_episode
+```
+
+
+```{r}
+
+count_first_appearance_deaths_episode %>%
+  gather(key = "event", value = "n", -season_episode) %>%
+  ggplot(aes(x = factor(season_episode), y = n, col = event, group = event)) +
+  geom_point() +
+  geom_line() +
+  geom_smooth()
+
+```
+
+```{r}
+
+p_07 <- count_first_appearance_deaths_episode %>%
+  select(-survived) %>%
+  mutate(alive = alive/10) %>%
+  gather(key = "event", value = "n", -season_episode) %>%
+  mutate(event = factor(event, 
+                        levels = c("alive", "first_appearances", "deaths"), 
+                        labels = c("Alive", "First appearances", "Deaths"))) %>%
+  ggplot(aes(x = factor(season_episode), y = n, col = event, group = event)) +
+  geom_point() +
+  #geom_line() +
+  geom_smooth(se = F) +
+  theme_dark() +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+  scale_color_manual(values = col_vector) +
+  scale_y_continuous(sec.axis = sec_axis(~.*10, name = "Number of alive characters")) +
+  labs(title = "Figure 7: Number of new appearances, deaths and alive characters",
+       x = "Episode",
+       y =  "Number of new appearances and deaths",
+       group = "",
+       col = "",
+       caption = "Note: Lines show a nonparametric regression fitted \n to the points that was added for convenience.")+
+    scale_x_discrete(labels = labels_x_scale %>% names)
+
+output_list[["graph_number_alive_characters_episode"]] <- p_07
+
+p_07
+
+```
+
+```{r}
+
+rm(all_seasons_cast_imdb_df, all_seasons_cast_imdb_full_wide_df, 
+   all_seasons_cast_imdb_full_long_df, p_07, count_first_appearance_deaths_episode,
+   count_deaths_episode, count_first_appearance_episode)
+
+```
+
+# Export data for article
+
+```{r}
+
+if(!"./output_articles" %in% list.dirs()){
+  
+  dir.create("output_articles")
+  
+}
+
+output_list %>%
+  write_rds("output_articles/output_list_16.rds")
+
+```
+
+
+
+good summary until now seems to be:
+
+
+# Summary of findings
+
+The number of appearances by episode seems to be stable across seasons. The first seasons might have slightly more appearances but overall there are no observable large changes. 
+
+The major difference is that many less characters participate in the 7th season. Those characters that participate have a more important role. The 5 most important characters in season 7 had between 1.3 and 1.7 times more apperances than the 5 most important characters in other seasons.  
+
+The proportion (and absolute number) of less important characters has decreased in the 7th season. On the other hand, the proportion (and number!) of important characters has increased dramatically.
+
+Curious: There is really a pattern distinguishing the beginning and the end of the season. 
+
+From simulations to check how seasons 1, 5 and 6 would be with 6 episodes we find that there really seem to be less characters appearing in season 7. Even when other seasons are 'cut' to 7 episodes, none goes below 55. In (real) 7th season there are 47. From the same simulations we observe that with shorter seasons, the differences in importance of top characters between season 7 and the rest of seasons remain.
+
+The lower number of participating characters in the 7th season doesn't seem to be due to a smaller pool of alive characters available. 
+
+# To do: 
+
+Then report sum of proportions of top n characters by season. Is this the same for screen times from IMDB user?

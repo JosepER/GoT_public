@@ -8,7 +8,7 @@ library(magrittr)
 library(tidyverse)
 
 
-imported_data <- read_rds("C:/Users/josep/Desktop/R/GoT/interim_output/shiny_app/export_for_shiny_16.rds")
+imported_data <- read_rds("./export_for_shiny_17.rds")
 
 
 ui <- fluidPage(
@@ -16,9 +16,10 @@ ui <- fluidPage(
    # Application title
    titlePanel("GoT - Transcript appearances"),
    
-   sidebarLayout(
-      sidebarPanel(width = 3,
-                   radioButtons(inputId = "method", 
+   fluidRow(
+     
+     column(12,
+            wellPanel(radioButtons(inputId = "method", 
                                 label = "Select characters:",
                                 choices = c("Top characters" = "top_n", 
                                             "Manually" = "manually"),
@@ -36,14 +37,14 @@ ui <- fluidPage(
                      selected = imported_data$plot_data$character %>% 
                        levels() %>% head(15) 
                      ))
-      ),
-      
-      mainPanel(width = 9,
+      ))),
+   fluidRow( column(12,
+                    wellPanel(width = 10,
         plotlyOutput("appearancesPlot", height = "600px")
       )
    )
 )
-
+)
 server <- function(input, output, session) {
    
   selected_characters <- reactive({
@@ -85,7 +86,8 @@ observe({
         scale_color_manual(values=imported_data$col_vector) +
         scale_x_discrete(labels = imported_data$labels_x_scale %>% names) +
         scale_y_continuous(limits= c(0,16)) +
-        labs(x = "Episode", y = "% appearances", col = "Character") +
+        labs(title = "Figure 1: % of participations among alive characters",
+             x = "Episode", y = "% appearances", col = "Character") +
         theme_dark()
       
    }) 
