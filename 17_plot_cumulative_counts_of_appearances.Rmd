@@ -209,7 +209,7 @@ export_for_shiny <- list(char_counts = char_estimated_alive_cumulative_counts_wi
                          plot_data = char_estimated_alive_cumulative_counts_wide_for_shiny) 
 
 export_for_shiny %>%
-  write_rds("interim_output/shiny_app/export_for_shiny_17.rds")
+  write_rds("18_GoT_characters_appearances/export_for_shiny_17.rds")
 
 ```
 
